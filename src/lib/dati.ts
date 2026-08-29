@@ -1,3 +1,4 @@
+import { configurazioneSupabase } from "@/lib/supabase/configurazione";
 import { creaClientServer } from "@/lib/supabase/server";
 import type {
   Azienda,
@@ -11,7 +12,18 @@ import type {
   TrattativaStato,
 } from "@/lib/database.types";
 
+/**
+ * Senza configurazione non esiste una base dati da interrogare: le letture
+ * rispondono vuoto, così la compilazione e le pagine reggono comunque e
+ * l'applicazione può spiegare cosa manca.
+ */
+function nonConfigurato() {
+  return configurazioneSupabase() === null;
+}
+
 export async function profiloCorrente(): Promise<Profilo | null> {
+  if (nonConfigurato()) return null;
+
   const supabase = await creaClientServer();
   const {
     data: { user },
@@ -23,6 +35,8 @@ export async function profiloCorrente(): Promise<Profilo | null> {
 }
 
 export async function fasi(): Promise<Fase[]> {
+  if (nonConfigurato()) return [];
+
   const supabase = await creaClientServer();
   const { data } = await supabase
     .from("fasi")
@@ -38,6 +52,8 @@ export async function fasiPipeline(): Promise<Fase[]> {
 }
 
 export async function trattativeAperte(): Promise<TrattativaStato[]> {
+  if (nonConfigurato()) return [];
+
   const supabase = await creaClientServer();
   const { data } = await supabase
     .from("v_trattative_stato")
@@ -57,6 +73,8 @@ export async function trattativeOltreSoglia(): Promise<TrattativaStato[]> {
 }
 
 export async function trattativa(id: string) {
+  if (nonConfigurato()) return null;
+
   const supabase = await creaClientServer();
 
   const [dettaglio, stato, storico, attivita, documenti] = await Promise.all([
@@ -92,6 +110,8 @@ export async function trattativa(id: string) {
 }
 
 export async function aziende(cerca?: string) {
+  if (nonConfigurato()) return [];
+
   const supabase = await creaClientServer();
   let query = supabase
     .from("aziende")
@@ -107,6 +127,8 @@ export async function aziende(cerca?: string) {
 }
 
 export async function azienda(id: string) {
+  if (nonConfigurato()) return null;
+
   const supabase = await creaClientServer();
 
   const [scheda, contatti, trattative, progetti] = await Promise.all([
@@ -127,6 +149,8 @@ export async function azienda(id: string) {
 }
 
 export async function scadenzeAperte() {
+  if (nonConfigurato()) return [];
+
   const supabase = await creaClientServer();
   const { data } = await supabase
     .from("scadenze")
@@ -144,6 +168,8 @@ export async function scadenzeDiOggi() {
 }
 
 export async function progetti() {
+  if (nonConfigurato()) return [];
+
   const supabase = await creaClientServer();
   const { data } = await supabase
     .from("progetti")
@@ -153,12 +179,16 @@ export async function progetti() {
 }
 
 export async function tempiPerFase(): Promise<TempoPerFase[]> {
+  if (nonConfigurato()) return [];
+
   const supabase = await creaClientServer();
   const { data } = await supabase.from("v_tempi_per_fase").select("*").order("ordine");
   return data ?? [];
 }
 
 export async function trattativeChiuse(): Promise<Trattativa[]> {
+  if (nonConfigurato()) return [];
+
   const supabase = await creaClientServer();
   const { data } = await supabase
     .from("trattative")
@@ -169,24 +199,32 @@ export async function trattativeChiuse(): Promise<Trattativa[]> {
 }
 
 export async function settori(): Promise<Settore[]> {
+  if (nonConfigurato()) return [];
+
   const supabase = await creaClientServer();
   const { data } = await supabase.from("settori").select("*").eq("attivo", true).order("nome");
   return data ?? [];
 }
 
 export async function servizi(): Promise<Servizio[]> {
+  if (nonConfigurato()) return [];
+
   const supabase = await creaClientServer();
   const { data } = await supabase.from("servizi").select("*").eq("attivo", true).order("nome");
   return data ?? [];
 }
 
 export async function motiviPerdita(): Promise<MotivoPerdita[]> {
+  if (nonConfigurato()) return [];
+
   const supabase = await creaClientServer();
   const { data } = await supabase.from("motivi_perdita").select("*").eq("attivo", true).order("nome");
   return data ?? [];
 }
 
 export async function elencoAziendeSemplice(): Promise<Pick<Azienda, "id" | "ragione_sociale">[]> {
+  if (nonConfigurato()) return [];
+
   const supabase = await creaClientServer();
   const { data } = await supabase.from("aziende").select("id, ragione_sociale").order("ragione_sociale");
   return data ?? [];

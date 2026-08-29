@@ -8,7 +8,21 @@ Applicazione web pensata per il telefono, che si allarga al desktop.
 ## Stato
 
 Applicazione sviluppata e compilante. Manca il progetto Supabase a cui
-collegarla: senza quello l'app parte ma non ha dati.
+collegarla: senza quello l'app parte e mostra una schermata che spiega quali
+variabili impostare, invece di una pagina bianca.
+
+## Deploy su Vercel
+
+Le due variabili sotto vanno impostate **prima** del deploy, in
+Settings → Environment Variables, per tutti e tre gli ambienti:
+
+| Variabile | Dove trovarla |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Impostazioni → API → Project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → Impostazioni → API → chiave pubblica |
+
+Le variabili non si applicano a un deploy già pubblicato: dopo averle aggiunte
+serve un nuovo deploy (Deployments → Redeploy).
 
 ## Avvio
 

@@ -1,10 +1,15 @@
 import { redirect } from "next/navigation";
 
+import { Configurazione } from "@/components/ui/Configurazione";
 import { BarraInferiore } from "@/components/nav/BarraInferiore";
 import { BarraLaterale } from "@/components/nav/BarraLaterale";
 import { profiloCorrente } from "@/lib/dati";
+import { variabiliMancanti } from "@/lib/supabase/configurazione";
 
 export default async function LayoutApplicazione({ children }: { children: React.ReactNode }) {
+  const mancanti = variabiliMancanti();
+  if (mancanti.length > 0) return <Configurazione mancanti={mancanti} />;
+
   const profilo = await profiloCorrente();
   if (!profilo) redirect("/accesso");
 
