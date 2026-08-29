@@ -7,17 +7,17 @@
 <body>
 <x-dc>
 <helmet>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
   <style>
-    body { margin: 0; font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif; }
+    body { margin: 0; font-family: "Manrope", "Segoe UI", system-ui, sans-serif; }
     a { color: #7B2FE0; } a:hover { color: #6721C4; }
   </style>
 </helmet>
 
-<div style="width: 390px; height: 844px; background: #FFFFFF; display: flex; flex-direction: column; justify-content: center; padding: 0 28px; box-sizing: border-box;">
+<div style="width: 390px; height: 844px; background: #F1F1EF; display: flex; flex-direction: column; padding: 0 16px; box-sizing: border-box;">
 
-  <div style="display: flex; flex-direction: column; align-items: center; gap: 18px; margin-bottom: 52px;">
-    <svg viewBox="0 0 1000 600" style="width: 78px; height: auto; color: #9747FF;">
+  <div style="display: flex; align-items: center; gap: 10px; padding: 30px 6px 0;">
+    <svg viewBox="0 0 1000 600" style="width: 26px; height: auto; color: #9747FF;">
       <g fill="currentColor">
         <rect x="400" y="0" width="200" height="200" rx="26"></rect>
         <rect x="200" y="200" width="200" height="200" rx="26"></rect>
@@ -26,29 +26,44 @@
         <rect x="800" y="400" width="200" height="200" rx="26"></rect>
       </g>
     </svg>
-    <div style="font-size: 25px; font-weight: 800; letter-spacing: -0.03em; color: #14111C;">Merkorn CRM</div>
+    <span style="font-size: 16px; font-weight: 800; letter-spacing: -0.02em; color: #16161A;">Merkorn</span>
   </div>
 
-  <div style="display: flex; flex-direction: column; gap: 14px;">
-    <div style="display: flex; flex-direction: column; gap: 7px;">
-      <label style="font-size: 13.5px; font-weight: 600; color: #3A3547;">Email</label>
-      <div style="height: 52px; border: 1.5px solid #E5E1EC; border-radius: 14px; display: flex; align-items: center; padding: 0 16px; font-size: 16px; color: #6E6880;">marco.valli@merkorn.it</div>
+  <div style="flex-grow: 1;"></div>
+
+  <div style="background: #FFFFFF; border-radius: 24px; padding: 28px 24px 26px; display: flex; flex-direction: column; gap: 22px;">
+
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <div style="font-size: 30px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; color: #16161A;">Le tue trattative,<br>sempre con te</div>
+      <div style="font-size: 14.5px; line-height: 1.5; color: #6C6C74;">Ogni passaggio di fase che registri qui diventa il tempo che il CRM misura per te.</div>
     </div>
-    <div style="display: flex; flex-direction: column; gap: 7px;">
-      <label style="font-size: 13.5px; font-weight: 600; color: #3A3547;">Password</label>
-      <div style="height: 52px; border: 1.5px solid #E5E1EC; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px;">
-        <span style="font-size: 19px; color: #6E6880; letter-spacing: 3px;">••••••••</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="#6E6880" stroke-width="1.8" style="width: 21px; height: 21px;">
+
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div style="background: #F6F6F4; border-radius: 15px; padding: 12px 16px; display: flex; flex-direction: column; gap: 3px;">
+        <label style="font-size: 12px; font-weight: 600; color: #6C6C74;">Email</label>
+        <div style="font-size: 16px; color: #16161A;">marco.valli@merkorn.it</div>
+      </div>
+      <div style="background: #F6F6F4; border-radius: 15px; padding: 12px 16px; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;">
+        <div style="display: flex; flex-direction: column; gap: 3px;">
+          <label style="font-size: 12px; font-weight: 600; color: #6C6C74;">Password</label>
+          <div style="font-size: 18px; color: #16161A; letter-spacing: 3px; line-height: 1.35;">••••••••</div>
+        </div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#6C6C74" stroke-width="1.8" style="width: 20px; height: 20px; margin-bottom: 2px;">
           <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6Z" stroke-linecap="round" stroke-linejoin="round"></path>
           <circle cx="12" cy="12" r="3"></circle>
         </svg>
       </div>
     </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div style="height: 54px; border-radius: 27px; background: #9747FF; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700;">Entra</div>
+      <div style="text-align: center; font-size: 14px; font-weight: 600; color: #6C6C74;">Password dimenticata?</div>
+    </div>
+
   </div>
 
-  <div style="height: 54px; border-radius: 27px; background: #9747FF; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 16.5px; font-weight: 700; margin-top: 26px;">Entra</div>
-
-  <div style="text-align: center; font-size: 14.5px; color: #6E6880; margin-top: 22px;">Password dimenticata?</div>
+  <div style="flex-grow: 1;"></div>
+  <div style="text-align: center; font-size: 12.5px; color: #6C6C74; padding-bottom: 30px;">Uso interno Merkorn</div>
 
 </div>
 </x-dc>

@@ -12,7 +12,25 @@ Sorgenti delle schermate del CRM, una per file, 390×844.
 | `AvanzaFase.dc.html` | Pannello di cambio fase |
 | `NuovaAzienda.dc.html` | Inserimento azienda |
 
-Colori e tipografia vengono da [`docs/design-tokens.css`](../../docs/design-tokens.css).
+## Linguaggio visivo
+
+Base monocroma su fondo grigio caldo `#F1F1EF`, schede bianche con angoli ampi
+(22px) e riquadri chiari annidati `#F6F6F4`. Nessun bordo: separano il fondo e lo
+spazio. Tipografia Manrope, titoli in peso 800 con spaziatura stretta.
+
+Il viola Merkorn `#9747FF` compare solo dove si agisce — pulsante principale, fase
+scelta, voce di menu attiva — e non colora mai un'informazione.
+
+Le fasi parlano a semaforo, non per identità:
+
+| Colore | Significato |
+|---|---|
+| Verde `#229160` · testo `#1B7A4B` | La fase rientra nella soglia |
+| Giallo `#B98600` · testo `#8A6200` | Vicina alla soglia |
+| Rosso `#D94A3F` · testo `#BF342B` | Oltre la soglia |
+
+Il nome della fase è sempre scritto: il colore dice se sei in tempo, non che fase
+è. Tutti i valori sono verificati sul contrasto (testo ≥ 4,5:1, pastiglie ≥ 3:1).
 
 Scelte di impianto:
 

@@ -8,9 +8,9 @@
     { "file": "NuovaAzienda.dc.html", "x": 980,  "y": 1010, "w": 390, "h": 844, "title": "6 · Nuova azienda" }
   ],
   "annotations": [
-    { "id": "nota-flusso", "x": 0, "y": -150, "w": 880, "text": "Schermate mobile, 390×844. Il filo è: apro l'app e vedo cosa devo fare oggi → dalla pipeline entro in una trattativa → la sposto di fase.\nNiente cruscotto: sul telefono il commerciale non legge grafici, agisce." },
-    { "id": "nota-pipeline", "x": 980, "y": -150, "w": 390, "text": "Sul telefono le colonne kanban non funzionano: la pipeline diventa un elenco raggruppato per fase, che si scorre tutto in verticale." },
-    { "id": "nota-fase", "x": 490, "y": 1900, "w": 390, "text": "Il pannello che scorre dal basso è l'unico punto in cui si cambia fase. È il momento in cui il CRM registra il tempo, quindi va reso facilissimo." }
+    { "id": "nota-stile", "x": 0, "y": -190, "w": 880, "text": "Base monocroma su fondo grigio caldo, schede bianche con angoli ampi, riquadri chiari annidati.\nIl viola Merkorn compare solo dove si agisce: pulsante principale, fase scelta, voce attiva. Non colora le informazioni." },
+    { "id": "nota-semaforo", "x": 980, "y": -190, "w": 390, "text": "Le fasi ora parlano a semaforo: verde entro la soglia, giallo vicino, rosso oltre. Il colore dice se sei in tempo, non che fase è — quella è scritta." },
+    { "id": "nota-fase", "x": 490, "y": 1900, "w": 390, "text": "Cambiare fase è il gesto in cui il CRM registra il tempo: schermata dedicata, fase successiva già proposta, le due chiusure sotto in verde e rosso." }
   ],
   "launch": { "view": "canvas" }
 }
