@@ -44,10 +44,31 @@ export function configurazioneSupabase(): ConfigurazioneSupabase | null {
 const SERVIZIO_ACCETTATE: [string, string | undefined][] = [
   ["SUPABASE_SERVICE_ROLE_KEY", process.env.SUPABASE_SERVICE_ROLE_KEY],
   ["SUPABASE_SECRET_KEY", process.env.SUPABASE_SECRET_KEY],
+  ["SUPABASE_SERVICE_KEY", process.env.SUPABASE_SERVICE_KEY],
 ];
 
+/**
+ * Supabase ha due generazioni di chiavi: quelle storiche in formato JWT
+ * (`eyJ...`) e quelle nuove (`sb_secret_...`). Accettiamo entrambe, ma
+ * scartiamo quella pubblica: e l'errore piu facile da fare, perche sta nella
+ * stessa schermata, e produrrebbe un "Invalid API key" incomprensibile.
+ */
 export function chiaveDiServizio(): string | null {
-  return primoValorizzato(SERVIZIO_ACCETTATE)?.[1] ?? null;
+  const trovata = primoValorizzato(SERVIZIO_ACCETTATE)?.[1] ?? null;
+  if (!trovata) return null;
+
+  const pubblica = primoValorizzato(CHIAVI_ACCETTATE)?.[1];
+  if (trovata === pubblica) return null;
+  if (trovata.startsWith("sb_publishable_")) return null;
+
+  return trovata;
+}
+
+/** Se la chiave di servizio impostata e in realta quella pubblica. */
+export function chiaveDiServizioSbagliata(): boolean {
+  const trovata = primoValorizzato(SERVIZIO_ACCETTATE)?.[1];
+  if (!trovata) return false;
+  return chiaveDiServizio() === null;
 }
 
 /**

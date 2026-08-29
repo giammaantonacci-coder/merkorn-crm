@@ -4,7 +4,11 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 import { creaClientAmministratore } from "@/lib/supabase/amministratore";
-import { pinSquadra, segretoAccessi } from "@/lib/supabase/configurazione";
+import {
+  chiaveDiServizioSbagliata,
+  pinSquadra,
+  segretoAccessi,
+} from "@/lib/supabase/configurazione";
 import { creaClientServer } from "@/lib/supabase/server";
 import {
   chiaveNome,
@@ -40,8 +44,9 @@ export async function entra(_precedente: StatoModulo, modulo: FormData): Promise
   if (!segreto) {
     return {
       errore:
-        "Manca SUPABASE_SERVICE_ROLE_KEY fra le variabili d'ambiente su Vercel. " +
-        "La trovi su Supabase, in Impostazioni > API > service_role.",
+        "Manca il segreto dell'accesso. Su Vercel imposta ACCESSO_SEGRETO con una " +
+        "stringa lunga a piacere, oppure SUPABASE_SERVICE_ROLE_KEY con la chiave " +
+        "segreta di Supabase.",
     };
   }
 
@@ -74,10 +79,13 @@ export async function entra(_precedente: StatoModulo, modulo: FormData): Promise
 }
 
 /**
- * Registra una persona al primo ingresso. Con la chiave di servizio si crea
- * direttamente; senza, si passa dalla registrazione normale, che funziona solo
- * se su Supabase la conferma via email e disattivata — cosa necessaria comunque,
- * visto che questi indirizzi sono interni e non ricevono posta.
+ * Registra una persona al primo ingresso, provando le strade in ordine e
+ * fermandosi alla prima che riesce. Nessun singolo tassello mal configurato
+ * deve poter bloccare l'accesso.
+ *
+ *   1. chiave di servizio, se c'e ed e valida — non richiede nulla su Supabase
+ *   2. registrazione normale con la chiave pubblica — richiede che la conferma
+ *      via email sia disattivata, perche questi indirizzi non ricevono posta
  *
  * Restituisce un messaggio d'errore, oppure null se e andata.
  */
@@ -86,6 +94,7 @@ async function registraPersona(
   credenziale: string,
   nome: string,
 ): Promise<string | null> {
+  const problemi: string[] = [];
   const amministratore = creaClientAmministratore();
 
   if (amministratore) {
@@ -95,7 +104,12 @@ async function registraPersona(
       email_confirm: true,
       user_metadata: { nome },
     });
-    return error ? `Non e stato possibile registrare il nome: ${error.message}` : null;
+    if (!error) return null;
+    problemi.push(`chiave di servizio rifiutata (${error.message})`);
+  } else if (chiaveDiServizioSbagliata()) {
+    problemi.push(
+      "in SUPABASE_SERVICE_ROLE_KEY c'e la chiave pubblica invece di quella segreta",
+    );
   }
 
   const supabase = await creaClientServer();
@@ -105,19 +119,35 @@ async function registraPersona(
     options: { data: { nome } },
   });
 
-  if (error) {
-    return `Non e stato possibile registrare il nome: ${error.message}`;
-  }
+  if (!error && data.session) return null;
 
-  if (!data.session) {
+  if (!error && !data.session) {
     return (
-      "Il nome e stato registrato ma manca la conferma via email. Su Supabase, in " +
-      "Authentication > Sign In / Providers > Email, disattiva «Confirm email»: " +
-      "gli indirizzi qui sono interni e non ricevono posta."
+      "Su Supabase, in Authentication > Sign In / Providers > Email, disattiva " +
+      "«Confirm email»: gli indirizzi usati qui sono interni e non ricevono posta."
     );
   }
 
-  return null;
+  // Nome gia registrato ma credenziale diversa: e cambiato il segreto da cui
+  // viene derivata. E l'unico caso in cui qualcuno resta fuori dai propri dati.
+  const messaggio = error?.message ?? "motivo ignoto";
+  if (/already registered|already exists/i.test(messaggio)) {
+    return (
+      "Questo nome risulta gia registrato, ma la credenziale non corrisponde: " +
+      "e cambiato il segreto da cui viene derivata (ACCESSO_SEGRETO o la chiave " +
+      "di servizio). Rimetti il valore precedente, oppure elimina la persona da " +
+      "Supabase in Authentication > Users e rientra."
+    );
+  }
+
+  problemi.push(`registrazione diretta rifiutata (${messaggio})`);
+
+  return (
+    "Non e stato possibile registrare il nome. " +
+    problemi.join("; ") +
+    ". Basta sistemare una delle due: metti la chiave segreta di Supabase in " +
+    "SUPABASE_SERVICE_ROLE_KEY, oppure disattiva «Confirm email» in Authentication."
+  );
 }
 
 export async function esci() {

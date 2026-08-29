@@ -21,10 +21,24 @@ Settings → Environment Variables, per tutti e tre gli ambienti:
 | Indirizzo del progetto | `NEXT_PUBLIC_SUPABASE_URL` · `SUPABASE_URL` | Supabase → Impostazioni → API → Project URL |
 | Chiave pubblica | `NEXT_PUBLIC_SUPABASE_ANON_KEY` · `SUPABASE_ANON_KEY` · `SUPABASE_PUBLISHABLE_KEY` | Supabase → Impostazioni → API |
 
-Serve inoltre **`SUPABASE_SERVICE_ROLE_KEY`** (Supabase → Impostazioni → API →
-`service_role`). Una variabile sola, tre usi: registra la persona al primo
-ingresso, suggerisce i nomi già usati, e fa da segreto per la credenziale
-interna. Resta solo lato server e non raggiunge mai il browser.
+Serve poi **un segreto** per l'accesso — `ACCESSO_SEGRETO`, una stringa lunga
+a piacere — e **almeno una** di queste due condizioni perché una persona nuova
+possa registrarsi al primo ingresso:
+
+- `SUPABASE_SERVICE_ROLE_KEY` con la chiave **segreta** di Supabase
+  (Impostazioni → API; va bene sia il formato storico `eyJ…` sia il nuovo
+  `sb_secret_…`), oppure
+- «Confirm email» disattivata in Supabase → Authentication → Sign In /
+  Providers → Email.
+
+Ne basta una: l'applicazione le prova in quest'ordine e si ferma alla prima che
+funziona. Se falliscono entrambe, il messaggio dice quale delle due sistemare e
+perché è fallita.
+
+Attenzione a non incollare la chiave **pubblica** in
+`SUPABASE_SERVICE_ROLE_KEY`: sta nella stessa schermata di Supabase, e
+darebbe un «Invalid API key» poco comprensibile. L'applicazione riconosce
+quel caso e lo dice.
 
 Ne basta uno per riga. L'applicazione è interamente server-side — nessun
 componente client parla con Supabase — quindi il prefisso `NEXT_PUBLIC_` non
