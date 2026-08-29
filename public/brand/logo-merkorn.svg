@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" role="img" aria-label="Merkorn">
+  <g fill="currentColor">
+    <rect x="400" y="0"   width="200" height="200" rx="26"/>
+    <rect x="200" y="200" width="200" height="200" rx="26"/>
+    <rect x="600" y="200" width="200" height="200" rx="26"/>
+    <rect x="0"   y="400" width="200" height="200" rx="26"/>
+    <rect x="800" y="400" width="200" height="200" rx="26"/>
+  </g>
+</svg>

@@ -11,6 +11,9 @@ Fase di progettazione. Il codice non è ancora stato scritto.
 
 - [Specifica funzionale](docs/specifica-funzionale.md) — decisioni, fasi della
   pipeline, modello dati, schermate, metriche e piano di lavoro.
+- [Sistema visivo](docs/sistema-visivo.md) — palette, tipografia e regole d'uso,
+  derivate dal logo.
+- [Token di design](docs/design-tokens.css) — gli stessi valori pronti per il codice.
 
 ## Stack previsto
 

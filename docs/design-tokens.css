@@ -1,0 +1,126 @@
+/*
+ * CRM Merkorn — token del sistema visivo
+ * Derivati dal viola del logo (#9747FF).
+ * Ogni valore è verificato sul contrasto: testo ≥ 4,5:1 sul proprio fondo,
+ * elementi grafici ≥ 3:1, in entrambi i temi.
+ */
+
+:root {
+  /* marchio */
+  --mk-accent:        #9747FF;  /* logo, azione principale        4,51:1 su bianco */
+  --mk-accent-deep:   #7B2FE0;  /* testo e link viola             6,32:1 su bianco */
+  --mk-accent-ink:    #6721C4;  /* stato premuto, anello di focus 7,55:1 su bianco */
+  --mk-accent-wash:   #F3EBFF;  /* selezione, etichetta di fase   solo fondo */
+
+  /* neutri */
+  --mk-canvas:        #F8F6FB;
+  --mk-surface:       #FFFFFF;
+  --mk-surface-2:     #F1EEF7;
+  --mk-line:          #E5E1EC;
+  --mk-line-strong:   #CFC8DC;
+  --mk-ink:           #14111C;
+  --mk-ink-soft:      #3A3547;
+  --mk-muted:         #6E6880;
+
+  /* stati — mai viola */
+  --mk-won:           #17794F;
+  --mk-stalled:       #A15F00;
+  --mk-lost:          #BF342B;
+  --mk-info:          #1B6AAD;
+
+  /* fasi di prevendita: la saturazione cresce verso la firma */
+  --mk-stage-1:       #A868FF;  /* primo contatto */
+  --mk-stage-2:       #9747FF;  /* qualificazione */
+  --mk-stage-3:       #8A2BF2;  /* analisi requisiti */
+  --mk-stage-4:       #7B2FE0;  /* proposta inviata */
+  --mk-stage-5:       #6721C4;  /* negoziazione */
+
+  /* fasi di post vendita: vira al verde-acqua, il cliente è acquisito */
+  --mk-stage-6:       #279486;  /* kickoff */
+  --mk-stage-7:       #1E8B7C;  /* sviluppo */
+  --mk-stage-8:       #137A6C;  /* collaudo e rilascio */
+  --mk-stage-9:       #0F6A5E;  /* assistenza */
+
+  /* uscite */
+  --mk-stage-unqual:  #8B8697;
+  --mk-stage-lost:    #BF342B;
+
+  /* tipografia */
+  --mk-font-display:  "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --mk-font-body:     "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mk-font-mono:     "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+
+/* tema scuro di sistema — non vince su una scelta esplicita di tema chiaro */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --mk-accent:      #C08BFF;
+    --mk-accent-deep: #D6B2FF;
+    --mk-accent-ink:  #E2CCFF;
+    --mk-accent-wash: #241934;
+
+    --mk-canvas:      #12101A;
+    --mk-surface:     #1B1826;
+    --mk-surface-2:   #241F33;
+    --mk-line:        #2E2A3D;
+    --mk-line-strong: #443E58;
+    --mk-ink:         #E9E6F0;
+    --mk-ink-soft:    #C8C2D8;
+    --mk-muted:       #A79FBC;
+
+    --mk-won:         #5CCB95;
+    --mk-stalled:     #E5A855;
+    --mk-lost:        #F58C84;
+    --mk-info:        #6FB6EE;
+
+    --mk-stage-1:     #DEC6FF;
+    --mk-stage-2:     #CBA8FF;
+    --mk-stage-3:     #B98BFF;
+    --mk-stage-4:     #A870FF;
+    --mk-stage-5:     #9758F0;
+
+    --mk-stage-6:     #7FDCCC;
+    --mk-stage-7:     #5FC9B8;
+    --mk-stage-8:     #45B3A2;
+    --mk-stage-9:     #2E9C8B;
+
+    --mk-stage-unqual: #9E98AE;
+    --mk-stage-lost:   #F58C84;
+  }
+}
+
+/* scelta esplicita dell'utente: vince in entrambe le direzioni */
+:root[data-theme="dark"] {
+  --mk-accent:      #C08BFF;
+  --mk-accent-deep: #D6B2FF;
+  --mk-accent-ink:  #E2CCFF;
+  --mk-accent-wash: #241934;
+
+  --mk-canvas:      #12101A;
+  --mk-surface:     #1B1826;
+  --mk-surface-2:   #241F33;
+  --mk-line:        #2E2A3D;
+  --mk-line-strong: #443E58;
+  --mk-ink:         #E9E6F0;
+  --mk-ink-soft:    #C8C2D8;
+  --mk-muted:       #A79FBC;
+
+  --mk-won:         #5CCB95;
+  --mk-stalled:     #E5A855;
+  --mk-lost:        #F58C84;
+  --mk-info:        #6FB6EE;
+
+  --mk-stage-1:     #DEC6FF;
+  --mk-stage-2:     #CBA8FF;
+  --mk-stage-3:     #B98BFF;
+  --mk-stage-4:     #A870FF;
+  --mk-stage-5:     #9758F0;
+
+  --mk-stage-6:     #7FDCCC;
+  --mk-stage-7:     #5FC9B8;
+  --mk-stage-8:     #45B3A2;
+  --mk-stage-9:     #2E9C8B;
+
+  --mk-stage-unqual: #9E98AE;
+  --mk-stage-lost:   #F58C84;
+}

@@ -24,23 +24,49 @@ registrati al momento del passaggio non sono più recuperabili dopo.
 
 ## 2. Fasi della pipeline
 
-Dieci fasi in sequenza più due esiti di uscita. Le soglie sono una proposta di
-partenza, da tarare sull'esperienza reale.
+Dieci fasi in sequenza più due esiti di uscita. Le soglie di attenzione sono
+calibrate sui benchmark del software B2B (vedi «Da dove vengono le soglie»).
 
 | # | Fase | Ambito | Soglia | Cosa si registra |
 |---|---|---|---|---|
-| 1 | Primo contatto | Prevendita | 7 gg | Fonte (passaparola, fiera, sito, campagna, contatto diretto), chi l'ha intercettato |
-| 2 | Qualificazione | Prevendita | 10 gg | Bisogno reale, budget, decisore raggiungibile |
-| 3 | Analisi requisiti | Prevendita | 21 gg | Incontri tecnici, esigenze, prima stima |
-| 4 | Proposta inviata | Prevendita | 14 gg | Valore, data invio, validità offerta, preventivo allegato |
-| 5 | Negoziazione | Prevendita | 21 gg | Revisioni di prezzo e perimetro, obiezioni, versioni del preventivo |
-| 6 | Contratto firmato | Chiusura | — | Data firma, valore finale; genera il progetto collegato |
-| 7 | Kickoff e onboarding | Post vendita | 10 gg | Referenti tecnici, accessi, piano di lavoro |
-| 8 | Sviluppo | Post vendita | — | Milestone con data prevista ed effettiva |
+| 1 | Primo contatto | Prevendita | 2 gg | Fonte (passaparola, fiera, sito, campagna, contatto diretto), chi l'ha intercettato |
+| 2 | Qualificazione | Prevendita | 7 gg | Bisogno reale, budget, decisore raggiungibile |
+| 3 | Analisi requisiti | Prevendita | 30 gg | Incontri tecnici, esigenze, prima stima |
+| 4 | Proposta inviata | Prevendita | 10 gg | Valore, data invio, validità offerta, preventivo allegato |
+| 5 | Negoziazione | Prevendita | 30 gg | Revisioni di prezzo e perimetro, obiezioni, versioni del preventivo |
+| 6 | Contratto firmato | Chiusura | 5 gg | Data firma, valore finale; genera il progetto collegato |
+| 7 | Kickoff e onboarding | Post vendita | 14 gg | Referenti tecnici, accessi, piano di lavoro |
+| 8 | Sviluppo | Post vendita | — | Milestone con data prevista ed effettiva; l'allarme viene dalle milestone scadute |
 | 9 | Collaudo e rilascio | Post vendita | 21 gg | Test, correzioni, go-live previsto vs effettivo |
-| 10 | Assistenza | Post vendita | — | Canone, scadenza contratto, ticket, upsell |
+| 10 | Assistenza | Post vendita | 90 gg di silenzio | Canone, scadenza contratto, ticket, upsell |
 | × | Persa | Uscita | — | Motivo obbligatorio da elenco chiuso + nota libera |
 | × | Non qualificata | Uscita | — | Tenuta separata dalle perse per non falsare la conversione |
+
+### Da dove vengono le soglie
+
+Non essendoci uno storico Merkorn da cui ricavarle, sono calibrate sui dati di
+settore del software su commessa, con tre regole:
+
+- **Durata del ciclo** — il ciclo mediano nel software B2B è di 84-90 giorni. La
+  somma delle soglie di prevendita (2+7+30+10+30 = 79 giorni) resta appena sotto:
+  una trattativa che rispetta tutte le soglie chiude nei tempi del mercato.
+- **Soglia = 1,5× la durata attesa** — pratica standard sui CRM. L'allarme scatta
+  quando una fase dura la metà in più del previsto, non appena sfora.
+- **Strette all'inizio, larghe alla fine** — rispondere entro 24 ore moltiplica per
+  decine la probabilità di qualificare un lead; la negoziazione vale invece da sola
+  il 35-40% del ciclo e va lasciata respirare.
+
+Sono numeri di partenza. Dopo una ventina di trattative chiuse il sistema mostra
+nelle impostazioni la durata mediana reale di ogni fase accanto alla soglia
+configurata, con un pulsante per adottarla: entro il primo anno le soglie saranno
+vostre e non più del settore.
+
+Fonti: [Focus Digital](https://focus-digital.co/average-sales-cycle-length-by-industry/),
+[Stackmatix](https://www.stackmatix.com/blog/b2b-sales-cycle-benchmarks),
+[DealHub](https://dealhub.io/glossary/stalled-opportunities/),
+[Pipedrive rotting](https://solvaa.co.uk/how-to-use-the-pipedrive-rotting-feature-to-track-deal-inactivity-and-boost-conversions/),
+[LeanData](https://www.leandata.com/blog/speed-to-lead-speed-is-the-key-to-lead-conversion/),
+[ObjectStyle](https://www.objectstyle.com/blog/discovery-phase-why-every-custom-software-project-could-use-one).
 
 Le fasi vivono in una tabella modificabile dalle impostazioni: si possono rinominare,
 riordinare o cambiare soglia senza toccare l'applicazione. Lo storico resta coerente
@@ -143,6 +169,8 @@ Tutte derivate dallo storico dei passaggi, nessun inserimento aggiuntivo richies
 | Passa a «Contratto firmato» | Chiede il valore finale e crea il progetto collegato in stato kickoff |
 | Passa a «Persa» | Obbliga a scegliere un motivo prima di salvare |
 | Supera la soglia della fase | La segnala come ferma nel cruscotto e nella pipeline |
+| Una trattativa aperta resta 21 giorni senza attività | La segnala come silente, a prescindere dalla fase |
+| Si chiudono venti trattative | Calcola la durata mediana reale di ogni fase e la propone come nuova soglia |
 | Una scadenza supera la data | La evidenzia in agenda e nel cruscotto della persona assegnata |
 | Un contratto si avvicina alla scadenza | Avvisa con 60 giorni di anticipo |
 | Si registra un'attività | Aggiorna la data di ultimo contatto dell'azienda |
@@ -164,8 +192,18 @@ Tutte derivate dallo storico dei passaggi, nessun inserimento aggiuntivo richies
 
 - **Le fasi sono quelle giuste?** Se il processo reale ha passaggi diversi
   (sopralluogo, analisi di fattibilità a pagamento, gara) vanno inseriti adesso.
-- **Le soglie di attenzione** — dopo quanti giorni di silenzio una trattativa è a
-  rischio, fase per fase. Servono numeri presi dall'esperienza.
-- **I dati esistenti** — se il portafoglio è oggi in un foglio di calcolo, va
-  importato all'avvio insieme alla base dati.
-- **Identità visiva** — logo Merkorn, colori e font di riferimento.
+  È l'unica cosa che cambierebbe il disegno delle schermate.
+- **Il viola esatto e il logo vettoriale** — dal file fornito si legge `#9747FF` e
+  la geometria è stata ricostruita in `public/brand/logo-merkorn.svg`. Se esiste
+  l'originale vettoriale, quello sostituisce la ricostruzione.
+- **Chi accede il primo giorno** — nome ed email delle persone del team, per creare
+  gli account e assegnare le trattative fin dal primo inserimento.
+
+Non c'è un portafoglio clienti da importare: il CRM nasce vuoto e il primo utilizzo
+coincide con il primo lead. Per la fase di design e per le prove si prepara una
+ventina di trattative di esempio distribuite su tutte le fasi, con storici
+plausibili, cancellabili con un comando prima della messa in produzione.
+
+Il sistema visivo (palette, tipografia, regole d'uso) è in
+[docs/sistema-visivo.md](sistema-visivo.md), con i valori pronti per il codice in
+[docs/design-tokens.css](design-tokens.css).
