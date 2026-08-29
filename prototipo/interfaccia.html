@@ -1,0 +1,1026 @@
+<title>CRM Merkorn</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --violet:      #9747FF;
+    --violet-deep: #7B2FE0;
+    --violet-ink:  #6721C4;
+    --violet-wash: #F3EBFF;
+
+    --s1: #A868FF; --s2: #9747FF; --s3: #8A2BF2; --s4: #7828D8; --s5: #6721C4;
+    --s6: #279486; --s7: #1E8B7C; --s8: #137A6C; --s9: #0F6A5E;
+    --s-unqual: #8B8697; --s-lost: #BF342B;
+
+    --page:      #EDE9F6;
+    --page-2:    #F6F3FB;
+    --shell:     #FFFFFF;
+    --surface:   #FFFFFF;
+    --surface-2: #F8F6FC;
+    --line:      #EBE7F3;
+    --line-2:    #DCD6EA;
+    --ink:       #14111C;
+    --ink-soft:  #3A3547;
+    --muted:     #6E6880;
+
+    --won:      #17794F;  --won-bg:     #E4F5EC;
+    --stalled:  #A15F00;  --stalled-bg: #FBEEDA;
+    --lost:     #BF342B;  --lost-bg:    #FBE7E5;
+    --info:     #1B6AAD;
+
+    --r-lg: 22px; --r-md: 16px; --r-sm: 10px;
+    --f: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+    --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --violet: #C08BFF; --violet-deep: #D6B2FF; --violet-ink: #E2CCFF; --violet-wash: #291D3B;
+      --s1:#DEC6FF; --s2:#CBA8FF; --s3:#B98BFF; --s4:#A870FF; --s5:#9758F0;
+      --s6:#7FDCCC; --s7:#5FC9B8; --s8:#45B3A2; --s9:#2E9C8B;
+      --s-unqual:#9E98AE; --s-lost:#F58C84;
+      --page: #0B0910; --page-2: #14111E; --shell: #16131F;
+      --surface: #1B1826; --surface-2: #221E30;
+      --line: #2A2539; --line-2: #3B3550;
+      --ink: #E9E6F0; --ink-soft: #C8C2D8; --muted: #A79FBC;
+      --won:#5CCB95; --won-bg:#16301F; --stalled:#E5A855; --stalled-bg:#31250F;
+      --lost:#F58C84; --lost-bg:#331916; --info:#6FB6EE;
+    }
+  }
+  :root[data-theme="dark"] {
+    --violet: #C08BFF; --violet-deep: #D6B2FF; --violet-ink: #E2CCFF; --violet-wash: #291D3B;
+    --s1:#DEC6FF; --s2:#CBA8FF; --s3:#B98BFF; --s4:#A870FF; --s5:#9758F0;
+    --s6:#7FDCCC; --s7:#5FC9B8; --s8:#45B3A2; --s9:#2E9C8B;
+    --s-unqual:#9E98AE; --s-lost:#F58C84;
+    --page: #0B0910; --page-2: #14111E; --shell: #16131F;
+    --surface: #1B1826; --surface-2: #221E30;
+    --line: #2A2539; --line-2: #3B3550;
+    --ink: #E9E6F0; --ink-soft: #C8C2D8; --muted: #A79FBC;
+    --won:#5CCB95; --won-bg:#16301F; --stalled:#E5A855; --stalled-bg:#31250F;
+    --lost:#F58C84; --lost-bg:#331916; --info:#6FB6EE;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: linear-gradient(160deg, var(--page) 0%, var(--page-2) 55%, var(--page) 100%);
+    min-height: 100vh;
+    color: var(--ink);
+    font-family: var(--f);
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .frame { padding: 22px; max-width: 1560px; margin: 0 auto; }
+  .shell {
+    background: var(--shell);
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    padding: 20px 24px 26px;
+    overflow: hidden;
+  }
+
+  /* ---------- topbar ---------- */
+  .topbar { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; padding-bottom: 20px; }
+  .brand { display: flex; align-items: center; gap: 11px; flex: none; }
+  .brand svg { width: 34px; height: auto; color: var(--violet); }
+  .brand span { font-weight: 800; font-size: 19px; letter-spacing: -0.03em; }
+  .brand span i { font-style: normal; color: var(--violet); }
+
+  nav.pills { display: flex; gap: 8px; flex-wrap: wrap; margin-left: 6px; }
+  .pill-tab {
+    font-family: var(--f); font-size: 14.5px; font-weight: 600;
+    padding: 9px 20px; border-radius: 999px;
+    border: 1.5px solid var(--line-2); background: transparent; color: var(--ink-soft);
+    cursor: pointer; white-space: nowrap; transition: border-color .15s, color .15s, background .15s;
+  }
+  .pill-tab:hover { border-color: var(--violet); color: var(--violet-deep); }
+  .pill-tab[aria-selected="true"] { border-color: var(--violet); color: var(--violet-deep); background: var(--violet-wash); }
+  .pill-tab:focus-visible { outline: 2px solid var(--violet-ink); outline-offset: 2px; }
+
+  .topbar-end { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .toggle {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--muted); font-weight: 600;
+    border: 1.5px solid var(--line-2); border-radius: 999px; padding: 7px 14px;
+    background: transparent; cursor: pointer;
+  }
+  .toggle[aria-pressed="true"] { border-color: var(--violet); color: var(--violet-deep); background: var(--violet-wash); }
+  .toggle .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line-2); }
+  .toggle[aria-pressed="true"] .dot { background: var(--violet); }
+  .avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(140deg, var(--violet) 0%, var(--violet-ink) 100%);
+    color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 13px; flex: none;
+  }
+
+  /* ---------- layout ---------- */
+  .view { display: none; }
+  .view.on { display: block; }
+  .cols { display: grid; grid-template-columns: minmax(0,1fr) 316px; gap: 16px; align-items: start; }
+  @media (max-width: 1180px) { .cols { grid-template-columns: minmax(0,1fr); } }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--r-lg); padding: 20px 22px;
+  }
+  .card + .card, .stack > * + * { margin-top: 16px; }
+
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
+  .card-title { font-size: 17.5px; font-weight: 700; letter-spacing: -0.02em; margin: 0; }
+  .card-sub { font-size: 13px; color: var(--muted); margin: 3px 0 0; }
+
+  /* ---------- KPI ---------- */
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(214px, 1fr)); gap: 16px; margin-bottom: 16px; }
+  .kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 18px 20px 20px; }
+  .kpi-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .kpi-label { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+  .delta { font-family: var(--f-mono); font-size: 12px; font-weight: 600; padding: 4px 11px; border-radius: 999px; white-space: nowrap; }
+  .delta.up { color: var(--won); background: var(--won-bg); }
+  .delta.down { color: var(--lost); background: var(--lost-bg); }
+  .delta.warn { color: var(--stalled); background: var(--stalled-bg); }
+  .kpi-val {
+    font-size: 33px; font-weight: 800; letter-spacing: -0.035em;
+    font-variant-numeric: tabular-nums; margin-top: 14px; line-height: 1;
+  }
+  .kpi-note { font-size: 13px; color: var(--muted); margin-top: 8px; }
+
+  /* ---------- chart: tempi per fase ---------- */
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; color: var(--ink-soft); }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; }
+  .key { width: 10px; height: 10px; border-radius: 3px; background: var(--violet); flex: none; }
+  .key.thr { width: 3px; height: 14px; border-radius: 1px; background: var(--muted); }
+
+  .bars { display: flex; flex-direction: column; gap: 3px; }
+  .bar-row {
+    display: grid; grid-template-columns: 138px minmax(0,1fr) 62px;
+    gap: 14px; align-items: center; padding: 5px 0; position: relative;
+  }
+  .bar-name { font-size: 13.5px; color: var(--ink-soft); font-weight: 600; }
+  .bar-track { position: relative; height: 26px; background: var(--surface-2); border-radius: 7px; }
+  .bar-fill { position: absolute; inset: 0 auto 0 0; border-radius: 7px; min-width: 5px; }
+  .bar-over { position: absolute; top: 0; bottom: 0; background: var(--stalled); border-radius: 0 7px 7px 0; }
+  .bar-thr { position: absolute; top: -3px; bottom: -3px; width: 3px; border-radius: 2px; background: var(--muted); }
+  .bar-val { font-family: var(--f-mono); font-size: 13px; font-variant-numeric: tabular-nums; color: var(--ink-soft); text-align: right; }
+  .bar-row:hover .bar-track { outline: 2px solid var(--violet-wash); outline-offset: 2px; }
+  .tip {
+    position: absolute; left: 152px; bottom: calc(100% - 4px); z-index: 5;
+    background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--r-sm);
+    padding: 9px 13px; font-size: 12.5px; white-space: nowrap;
+    box-shadow: 0 8px 24px rgba(20,17,28,.13);
+    opacity: 0; visibility: hidden; transition: opacity .12s;
+  }
+  .bar-row:hover .tip, .bar-row:focus-within .tip { opacity: 1; visibility: visible; }
+  .tip b { font-family: var(--f-mono); font-weight: 600; }
+  .tip .over { color: var(--stalled); }
+
+  /* ---------- dot matrix ---------- */
+  .dotchart { display: flex; align-items: flex-end; gap: 10px; height: 128px; padding-top: 6px; }
+  .dotcol { flex: 1; display: flex; flex-direction: column-reverse; align-items: center; gap: 4px; min-width: 0; }
+  .dot { width: 13px; height: 13px; border-radius: 50%; flex: none; }
+  .dotcol .cap { font-family: var(--f-mono); font-size: 10.5px; color: var(--muted); margin-bottom: 2px; }
+  .dotwrap { position: relative; }
+  .dotwrap:hover .dot { transform: scale(1.12); }
+  .dot { transition: transform .12s; }
+
+  /* ---------- rail ---------- */
+  .rail-item {
+    display: grid; grid-template-columns: 26px 1fr; gap: 12px;
+    padding: 13px 0; border-bottom: 1px solid var(--line); align-items: start;
+  }
+  .rail-item:last-child { border-bottom: none; }
+  .rail-ic { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: #fff; }
+  .rail-t { font-size: 14.5px; font-weight: 700; letter-spacing: -0.01em; }
+  .rail-d { font-size: 13px; color: var(--muted); line-height: 1.45; margin-top: 2px; }
+
+  /* ---------- buttons ---------- */
+  .btn {
+    font-family: var(--f); font-weight: 700; font-size: 14.5px;
+    border: none; border-radius: 999px; padding: 12px 26px; cursor: pointer;
+    background: linear-gradient(135deg, #A868FF 0%, #7828D8 100%); color: #FFFFFF;
+  }
+  .btn:focus-visible { outline: 2px solid var(--violet-ink); outline-offset: 3px; }
+  .btn.ghost { background: transparent; color: var(--violet-deep); border: 1.5px solid var(--line-2); }
+  .btn.sm { padding: 8px 17px; font-size: 13.5px; }
+
+  /* ---------- table ---------- */
+  .tabs { display: flex; gap: 7px; flex-wrap: wrap; }
+  .tab {
+    font-family: var(--f); font-size: 14px; font-weight: 600; color: var(--muted);
+    background: transparent; border: 1.5px solid transparent; border-radius: 999px;
+    padding: 7px 16px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
+  }
+  .tab[aria-selected="true"] { border-color: var(--violet); color: var(--violet-deep); }
+  .tab .n { font-family: var(--f-mono); font-size: 11px; background: var(--violet-wash); color: var(--violet-deep); border-radius: 999px; padding: 1px 7px; }
+  .tab[aria-selected="false"] .n { background: var(--surface-2); color: var(--muted); }
+
+  .tscroll { overflow-x: auto; margin-top: 6px; }
+  table { border-collapse: collapse; width: 100%; min-width: 760px; }
+  thead th {
+    text-align: left; font-size: 12px; font-weight: 600; color: var(--muted);
+    padding: 12px 14px; border-bottom: 1px solid var(--line); white-space: nowrap;
+  }
+  tbody td { padding: 14px; border-bottom: 1px solid var(--line); font-size: 14px; vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--surface-2); }
+  td.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .co { display: flex; align-items: center; gap: 11px; }
+  .co-av { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; font-size: 12.5px; font-weight: 700; color: #fff; flex: none; }
+  .co-n { font-weight: 700; letter-spacing: -0.01em; }
+  .co-s { font-size: 12.5px; color: var(--muted); }
+
+  .chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 12.5px; font-weight: 600; padding: 5px 12px; border-radius: 999px;
+    border: 1px solid var(--line-2); color: var(--ink-soft); white-space: nowrap;
+  }
+  .chip .sq { width: 8px; height: 8px; border-radius: 3px; flex: none; }
+  .chip.won { color: var(--won); background: var(--won-bg); border-color: transparent; }
+  .chip.warn { color: var(--stalled); background: var(--stalled-bg); border-color: transparent; }
+  .chip.lost { color: var(--lost); background: var(--lost-bg); border-color: transparent; }
+
+  /* ---------- kanban ---------- */
+  .board { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 8px; }
+  .col { flex: none; width: 268px; display: flex; flex-direction: column; gap: 10px; }
+  .col-head { display: flex; align-items: center; gap: 9px; padding: 0 4px 2px; }
+  .col-sq { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+  .col-n { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+  .col-c { font-family: var(--f-mono); font-size: 11.5px; color: var(--muted); margin-left: auto; }
+  .col-body { background: var(--surface-2); border-radius: var(--r-md); padding: 10px; display: flex; flex-direction: column; gap: 10px; min-height: 96px; }
+  .deal {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 13px;
+    padding: 13px 14px; display: flex; flex-direction: column; gap: 8px; cursor: pointer;
+  }
+  .deal:hover { border-color: var(--violet); }
+  .deal[draggable="true"] { cursor: grab; }
+  .deal.dragging { opacity: .45; }
+  .col-body.over { outline: 2px dashed var(--violet); outline-offset: -2px; background: var(--violet-wash); }
+  .board { scrollbar-width: thin; }
+  .board-hint { font-size: 12.5px; color: var(--muted); margin: 10px 2px 0; }
+  .deal-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .deal-co { font-size: 14.5px; font-weight: 700; letter-spacing: -0.01em; }
+  .deal-v { font-family: var(--f-mono); font-size: 13px; color: var(--ink-soft); white-space: nowrap; }
+  .deal-t { font-size: 13px; color: var(--muted); }
+  .deal-f { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .mini { font-family: var(--f-mono); font-size: 11px; color: var(--muted); }
+  .col-empty { font-size: 13px; color: var(--muted); text-align: center; padding: 18px 8px; line-height: 1.5; }
+
+  /* ---------- deal detail ---------- */
+  .track { display: flex; gap: 4px; margin: 4px 0 10px; align-items: flex-start; }
+  .track-seg { display: flex; flex-direction: column; gap: 7px; min-width: 0; flex: 1 1 76px; }
+  .track-bar { height: 8px; border-radius: 4px; background: var(--surface-2); }
+  .track-seg.done .track-bar, .track-seg.now .track-bar { background: var(--seg); }
+  .track-seg.now .track-bar { box-shadow: 0 0 0 3px var(--violet-wash); }
+  .track-seg.over .track-bar, .track-seg.now.over .track-bar { background: var(--stalled); }
+  .track-l { font-size: 11.5px; color: var(--muted); line-height: 1.3; }
+  .track-d { font-family: var(--f-mono); font-size: 12px; font-weight: 600; color: var(--ink-soft); }
+  .track-seg.now .track-d { color: var(--stalled); }
+
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 14px; }
+  .fact { background: var(--surface-2); border-radius: var(--r-md); padding: 13px 15px; }
+  .fact-l { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .fact-v { font-size: 19px; font-weight: 800; letter-spacing: -0.025em; margin-top: 5px; font-variant-numeric: tabular-nums; }
+  .fact-v.sm { font-size: 15.5px; font-weight: 700; letter-spacing: -0.01em; }
+
+  .tl-item { display: grid; grid-template-columns: 30px 1fr; gap: 13px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+  .tl-item:last-child { border-bottom: none; }
+  .tl-ic { width: 30px; height: 30px; border-radius: 10px; background: var(--violet-wash); color: var(--violet-deep); display: grid; place-items: center; font-size: 13px; font-weight: 700; }
+  .tl-t { font-size: 14.5px; font-weight: 700; letter-spacing: -0.01em; }
+  .tl-d { font-size: 13.5px; color: var(--muted); line-height: 1.5; margin-top: 2px; }
+  .tl-m { font-family: var(--f-mono); font-size: 11.5px; color: var(--muted); margin-top: 4px; }
+
+  /* ---------- empty ---------- */
+  .empty { text-align: center; padding: 54px 24px; }
+  .empty svg { width: 62px; color: var(--line-2); margin-bottom: 18px; }
+  .empty h3 { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 8px; }
+  .empty p { font-size: 14.5px; color: var(--muted); max-width: 42ch; margin: 0 auto 20px; line-height: 1.55; }
+
+  .note {
+    margin-top: 18px; font-size: 13px; color: var(--muted);
+    text-align: center; line-height: 1.55;
+  }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="frame">
+<div class="shell">
+
+  <div class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 1000 600" role="img" aria-label="Merkorn">
+        <g fill="currentColor">
+          <rect x="400" y="0" width="200" height="200" rx="26"/>
+          <rect x="200" y="200" width="200" height="200" rx="26"/>
+          <rect x="600" y="200" width="200" height="200" rx="26"/>
+          <rect x="0" y="400" width="200" height="200" rx="26"/>
+          <rect x="800" y="400" width="200" height="200" rx="26"/>
+        </g>
+      </svg>
+      <span>Merkorn<i>CRM</i></span>
+    </div>
+
+    <nav class="pills" role="tablist" aria-label="Sezioni">
+      <button class="pill-tab" role="tab" aria-selected="true"  data-view="dash">Cruscotto</button>
+      <button class="pill-tab" role="tab" aria-selected="false" data-view="pipe">Pipeline</button>
+      <button class="pill-tab" role="tab" aria-selected="false" data-view="deal">Trattativa</button>
+      <button class="pill-tab" role="tab" aria-selected="false" data-view="comp">Aziende</button>
+    </nav>
+
+    <div class="topbar-end">
+      <button class="toggle" id="emptyToggle" aria-pressed="false">
+        <span class="dot"></span> Stato a vuoto
+      </button>
+      <div class="avatar" title="Marco Valli">MV</div>
+    </div>
+  </div>
+
+  <!-- ============ CRUSCOTTO ============ -->
+  <section class="view on" id="v-dash">
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kpi-top"><span class="kpi-label">Trattative aperte</span><span class="delta up">+3</span></div>
+        <div class="kpi-val">11</div>
+        <div class="kpi-note">8 il mese scorso</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-top"><span class="kpi-label">Valore pipeline</span><span class="delta up">+18%</span></div>
+        <div class="kpi-val">€ 342.500</div>
+        <div class="kpi-note">€ 290.000 il mese scorso</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-top"><span class="kpi-label">Ferme oltre soglia</span><span class="delta warn">+1</span></div>
+        <div class="kpi-val">3</div>
+        <div class="kpi-note">Da richiamare oggi</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-top"><span class="kpi-label">Tasso di successo</span><span class="delta down">−6%</span></div>
+        <div class="kpi-val">42%</div>
+        <div class="kpi-note">5 vinte su 12 chiuse</div>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div class="stack">
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Tempi per fase</h2>
+              <p class="card-sub">Durata mediana delle trattative chiuse, confrontata con la soglia di attenzione</p>
+            </div>
+            <div class="legend">
+              <span><i class="key" style="background:var(--s3)"></i> Prevendita</span>
+              <span><i class="key" style="background:var(--s7)"></i> Post vendita</span>
+              <span><i class="key" style="background:var(--stalled)"></i> Oltre soglia</span>
+              <span><i class="key thr"></i> Soglia</span>
+            </div>
+          </div>
+
+          <div class="bars" id="barsPhase"></div>
+
+          <p class="note" style="text-align:left; margin-top:16px">
+            La barra che supera il proprio segno di soglia è la fase che sta rallentando il processo.
+            Con meno di venti trattative chiuse il dato resta indicativo.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Nuove trattative</h2>
+              <p class="card-sub">Ogni cerchio è una trattativa aperta in quella settimana; in verde quelle poi diventate clienti</p>
+            </div>
+            <div class="legend">
+              <span><i class="key" style="background:var(--s2)"></i> Aperte</span>
+              <span><i class="key" style="background:var(--s7)"></i> Diventate clienti</span>
+            </div>
+          </div>
+          <div class="dotchart" id="dotChart"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Trattative da seguire</h2>
+              <p class="card-sub">Ordinate per giorni di permanenza nella fase</p>
+            </div>
+            <div class="tabs" role="tablist" aria-label="Filtro trattative">
+              <button class="tab" role="tab" aria-selected="true">Da seguire <span class="n">3</span></button>
+              <button class="tab" role="tab" aria-selected="false">Aperte <span class="n">11</span></button>
+              <button class="tab" role="tab" aria-selected="false">Chiuse</button>
+            </div>
+          </div>
+          <div class="tscroll">
+            <table>
+              <thead>
+                <tr><th>Azienda</th><th>Trattativa</th><th>Fase</th><th>In fase da</th><th>Valore</th><th>Stato</th></tr>
+              </thead>
+              <tbody id="dealRows"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="stack">
+        <div class="card">
+          <div class="card-head" style="margin-bottom:6px">
+            <h2 class="card-title">Da fare oggi</h2>
+          </div>
+          <div id="railTasks"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head" style="margin-bottom:12px">
+            <h2 class="card-title">Ciclo commerciale</h2>
+          </div>
+          <div class="facts">
+            <div class="fact"><div class="fact-l">Contatto → firma</div><div class="fact-v">68 gg</div></div>
+            <div class="fact"><div class="fact-l">Firma → go-live</div><div class="fact-v">91 gg</div></div>
+          </div>
+          <p class="card-sub" style="margin-top:14px">
+            Il ciclo di vendita è sotto la mediana di settore, che nel software B2B si attesta fra 84 e 90 giorni.
+          </p>
+        </div>
+
+        <div class="card" style="background:linear-gradient(150deg, var(--violet-wash) 0%, var(--surface) 70%)">
+          <h2 class="card-title" style="margin-bottom:8px">Contratti in scadenza</h2>
+          <p class="card-sub" style="margin-bottom:16px">Due contratti di manutenzione scadono entro 60 giorni. Il rinnovo va proposto adesso.</p>
+          <button class="btn sm" type="button">Vedi i contratti</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PIPELINE ============ -->
+  <section class="view" id="v-pipe">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <h2 class="card-title">Pipeline</h2>
+          <p class="card-sub">Trascina una scheda in un'altra colonna: il contatore della fase riparte e il passaggio finisce nello storico</p>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center">
+          <button class="btn ghost sm" type="button">Vista tabella</button>
+          <button class="btn sm" type="button">Nuova trattativa</button>
+        </div>
+      </div>
+      <div class="board" id="board"></div>
+      <p class="board-hint">Nove colonne: scorri lateralmente per raggiungere le fasi di post vendita.</p>
+    </div>
+  </section>
+
+  <!-- ============ TRATTATIVA ============ -->
+  <section class="view" id="v-deal">
+    <div class="cols">
+      <div class="stack">
+        <div class="card">
+          <div class="card-head" style="margin-bottom:14px">
+            <div style="display:flex; align-items:center; gap:14px">
+              <div class="co-av" style="background:var(--s4); width:44px; height:44px; border-radius:14px; font-size:15px">LA</div>
+              <div>
+                <h2 class="card-title" style="font-size:21px">Logistica Adriatica</h2>
+                <p class="card-sub">Portale di tracking spedizioni · Marco Valli</p>
+              </div>
+            </div>
+            <div style="display:flex; gap:10px">
+              <button class="btn ghost sm" type="button">Registra attività</button>
+              <button class="btn sm" type="button">Avanza di fase</button>
+            </div>
+          </div>
+
+          <div class="track" id="track"></div>
+
+          <div class="facts" style="margin-top:20px">
+            <div class="fact"><div class="fact-l">Valore</div><div class="fact-v">€ 61.500</div></div>
+            <div class="fact"><div class="fact-l">In pipeline da</div><div class="fact-v">46 gg</div></div>
+            <div class="fact"><div class="fact-l">In questa fase</div><div class="fact-v" style="color:var(--stalled)">14 gg</div></div>
+            <div class="fact"><div class="fact-l">Chiusura prevista</div><div class="fact-v sm">30 giugno</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head" style="margin-bottom:6px">
+            <h2 class="card-title">Cronologia</h2>
+          </div>
+          <div>
+            <div class="tl-item">
+              <div class="tl-ic">→</div>
+              <div>
+                <div class="tl-t">Passata a Proposta inviata</div>
+                <div class="tl-d">Preventivo v2 inviato a Laura Bianchi con lo sconto sul canone del primo anno.</div>
+                <div class="tl-m">14 maggio · Marco Valli · 21 giorni in Analisi requisiti</div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-ic">☎</div>
+              <div>
+                <div class="tl-t">Chiamata con Laura Bianchi</div>
+                <div class="tl-d">Ha confermato il budget ma vuole capire i tempi di integrazione con il gestionale esistente.</div>
+                <div class="tl-m">9 maggio · 25 minuti</div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-ic">→</div>
+              <div>
+                <div class="tl-t">Passata ad Analisi requisiti</div>
+                <div class="tl-d">Due incontri tecnici in sede, raccolti i flussi di magazzino.</div>
+                <div class="tl-m">23 aprile · Marco Valli · 9 giorni in Qualificazione</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stack">
+        <div class="card">
+          <div class="card-head" style="margin-bottom:6px"><h2 class="card-title">Referenti</h2></div>
+          <div class="rail-item">
+            <div class="rail-ic" style="background:var(--s4)">LB</div>
+            <div><div class="rail-t">Laura Bianchi</div><div class="rail-d">Responsabile IT · decisore</div></div>
+          </div>
+          <div class="rail-item">
+            <div class="rail-ic" style="background:var(--s-unqual)">GM</div>
+            <div><div class="rail-t">Giorgio Mari</div><div class="rail-d">Direttore operativo · influenzatore</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head" style="margin-bottom:6px"><h2 class="card-title">Documenti</h2></div>
+          <div class="rail-item">
+            <div class="rail-ic" style="background:var(--s2)">P2</div>
+            <div><div class="rail-t">Preventivo v2</div><div class="rail-d">14 maggio · 340 KB</div></div>
+          </div>
+          <div class="rail-item">
+            <div class="rail-ic" style="background:var(--s-unqual)">P1</div>
+            <div><div class="rail-t">Preventivo v1</div><div class="rail-d">2 maggio · 336 KB</div></div>
+          </div>
+        </div>
+
+        <div class="card" style="border-color:var(--stalled)">
+          <h2 class="card-title" style="margin-bottom:8px">Ferma da 14 giorni</h2>
+          <p class="card-sub" style="margin-bottom:16px">La soglia per «Proposta inviata» è 10 giorni. È la fase in cui le trattative muoiono in silenzio.</p>
+          <button class="btn sm" type="button">Programma il richiamo</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AZIENDE ============ -->
+  <section class="view" id="v-comp">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <h2 class="card-title">Aziende</h2>
+          <p class="card-sub">Anagrafica completa del portafoglio</p>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center">
+          <button class="btn ghost sm" type="button">Esporta</button>
+          <button class="btn sm" type="button">Nuova azienda</button>
+        </div>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Filtro aziende" style="margin-bottom:8px">
+        <button class="tab" role="tab" aria-selected="true">Tutte <span class="n">9</span></button>
+        <button class="tab" role="tab" aria-selected="false">Clienti <span class="n">3</span></button>
+        <button class="tab" role="tab" aria-selected="false">Potenziali <span class="n">6</span></button>
+      </div>
+      <div class="tscroll">
+        <table>
+          <thead>
+            <tr><th>Azienda</th><th>Settore</th><th>Fonte</th><th>Trattative</th><th>Ultimo contatto</th><th>Stato</th></tr>
+          </thead>
+          <tbody id="compRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VUOTO ============ -->
+  <section class="view" id="v-empty">
+    <div class="card">
+      <div class="empty">
+        <svg viewBox="0 0 1000 600" fill="currentColor" aria-hidden="true">
+          <rect x="400" y="0" width="200" height="200" rx="26"/>
+          <rect x="200" y="200" width="200" height="200" rx="26"/>
+          <rect x="600" y="200" width="200" height="200" rx="26"/>
+          <rect x="0" y="400" width="200" height="200" rx="26"/>
+          <rect x="800" y="400" width="200" height="200" rx="26"/>
+        </svg>
+        <h3 id="emptyTitle">Non c'è ancora nessuna trattativa</h3>
+        <p id="emptyText">
+          Il CRM parte vuoto: il primo record sarà un lead vero, non un dato di prova.
+          Comincia inserendo l'azienda, poi apri la trattativa che la riguarda.
+        </p>
+        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap">
+          <button class="btn" type="button">Aggiungi la prima azienda</button>
+          <button class="btn ghost" type="button">Importa da file</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <p class="note">
+    Prototipo di interfaccia. I nomi delle aziende e i numeri servono solo a mostrare le schermate piene:
+    il CRM in produzione parte senza alcun dato. Usa «Stato a vuoto» per vedere come si presenta il primo giorno.
+  </p>
+
+</div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var STAGES = [
+    { n: "Primo contatto",   c: "var(--s1)", thr: 2  },
+    { n: "Qualificazione",   c: "var(--s2)", thr: 7  },
+    { n: "Analisi requisiti",c: "var(--s3)", thr: 30 },
+    { n: "Proposta inviata", c: "var(--s4)", thr: 10 },
+    { n: "Negoziazione",     c: "var(--s5)", thr: 30 },
+    { n: "Kickoff",          c: "var(--s6)", thr: 14 },
+    { n: "Sviluppo",         c: "var(--s7)", thr: 0  },
+    { n: "Rilascio",         c: "var(--s8)", thr: 21 },
+    { n: "Assistenza",       c: "var(--s9)", thr: 0  }
+  ];
+
+  /* durata mediana misurata vs soglia */
+  var PHASE_TIMES = [
+    { i: 0, real: 1  }, { i: 1, real: 5  }, { i: 2, real: 24 },
+    { i: 3, real: 16 }, { i: 4, real: 22 }, { i: 5, real: 11 }, { i: 7, real: 18 }
+  ];
+
+  var DEALS = [
+    { co: "Logistica Adriatica", t: "Portale tracking spedizioni", s: 3, d: 14, v: "€ 61.500", own: "Marco V." },
+    { co: "Ferramenta Rossi",    t: "Gestionale magazzino",        s: 2, d: 9,  v: "€ 24.000", own: "Marco V." },
+    { co: "Studio Bertani",      t: "App gestione pratiche",       s: 6, d: 31, v: "€ 38.000", own: "Giulia P." },
+    { co: "Cantina Vallese",     t: "E-commerce B2B",              s: 4, d: 35, v: "€ 52.000", own: "Giulia P." },
+    { co: "Termoidraulica Neri", t: "Preventivatore su misura",    s: 1, d: 3,  v: "€ 12.000", own: "Marco V." },
+    { co: "Officine Salvi",      t: "Manutenzione predittiva",     s: 2, d: 6,  v: "€ 44.000", own: "Giulia P." },
+    { co: "Poliambulatorio Sole",t: "Agenda pazienti",             s: 0, d: 1,  v: "€ 18.000", own: "Marco V." },
+    { co: "Trasporti Bevi",      t: "Integrazione fatturazione",   s: 3, d: 4,  v: "€ 27.500", own: "Marco V." },
+    { co: "Vivai Costa",         t: "Catalogo e listini",          s: 4, d: 12, v: "€ 31.000", own: "Giulia P." },
+    { co: "Metalmeccanica Fiore",t: "Controllo produzione",        s: 7, d: 26, v: "€ 74.000", own: "Giulia P." },
+    { co: "Panificio Sette",     t: "Ordini e consegne",           s: 8, d: 52, v: "€ 16.500", own: "Marco V." }
+  ];
+
+  var COMPANIES = [
+    { n: "Logistica Adriatica", set: "Trasporti e logistica", f: "Passaparola", d: 1, last: "14 mag", st: "Potenziale", c: "var(--s4)" },
+    { n: "Metalmeccanica Fiore",set: "Manifatturiero",        f: "Fiera",       d: 1, last: "12 mag", st: "Cliente",    c: "var(--s7)" },
+    { n: "Studio Bertani",      set: "Servizi professionali", f: "Sito web",    d: 1, last: "11 mag", st: "Cliente",    c: "var(--s6)" },
+    { n: "Cantina Vallese",     set: "Alimentare",            f: "Passaparola", d: 1, last: "8 mag",  st: "Potenziale", c: "var(--s5)" },
+    { n: "Ferramenta Rossi",    set: "Commercio",             f: "Sito web",    d: 1, last: "6 mag",  st: "Potenziale", c: "var(--s3)" },
+    { n: "Panificio Sette",     set: "Alimentare",            f: "Passaparola", d: 1, last: "2 mag",  st: "Cliente",    c: "var(--s9)" },
+    { n: "Officine Salvi",      set: "Manifatturiero",        f: "Contatto diretto", d: 1, last: "28 apr", st: "Potenziale", c: "var(--s2)" },
+    { n: "Vivai Costa",         set: "Agricoltura",           f: "Fiera",       d: 1, last: "24 apr", st: "Potenziale", c: "var(--s5)" },
+    { n: "Poliambulatorio Sole",set: "Sanità",                f: "Sito web",    d: 1, last: "21 apr", st: "Potenziale", c: "var(--s1)" }
+  ];
+
+  var TASKS = [
+    { ic: "!", bg: "var(--stalled)", t: "Richiamare Logistica Adriatica", d: "Proposta ferma da 14 giorni, soglia superata di 4" },
+    { ic: "☎", bg: "var(--s2)",      t: "Chiamata con Officine Salvi",    d: "Oggi alle 15:00 · qualificazione del budget" },
+    { ic: "€", bg: "var(--s4)",      t: "Preventivo per Vivai Costa",     d: "Da inviare entro domani" },
+    { ic: "↻", bg: "var(--s9)",      t: "Rinnovo Panificio Sette",        d: "Canone in scadenza fra 43 giorni" }
+  ];
+
+  function el(tag, cls, txt) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (txt !== undefined) e.textContent = txt;
+    return e;
+  }
+
+  /* ---- barre tempi per fase ---- */
+  function drawBars() {
+    var host = document.getElementById("barsPhase");
+    var max = 0;
+    PHASE_TIMES.forEach(function (p) {
+      max = Math.max(max, p.real, STAGES[p.i].thr);
+    });
+    max = max * 1.18;
+
+    PHASE_TIMES.forEach(function (p) {
+      var st = STAGES[p.i];
+      var over = p.real > st.thr;
+
+      var row = el("div", "bar-row");
+      row.tabIndex = 0;
+
+      row.appendChild(el("div", "bar-name", st.n));
+
+      var track = el("div", "bar-track");
+      var fill = el("div", "bar-fill");
+      fill.style.width = (Math.min(p.real, st.thr) / max * 100).toFixed(1) + "%";
+      fill.style.background = st.c;
+      track.appendChild(fill);
+
+      if (over) {
+        var ex = el("div", "bar-over");
+        ex.style.left = (st.thr / max * 100).toFixed(1) + "%";
+        ex.style.width = ((p.real - st.thr) / max * 100).toFixed(1) + "%";
+        track.appendChild(ex);
+      }
+
+      var thr = el("div", "bar-thr");
+      thr.style.left = (st.thr / max * 100).toFixed(1) + "%";
+      track.appendChild(thr);
+      row.appendChild(track);
+
+      row.appendChild(el("div", "bar-val", p.real + " gg"));
+
+      var tip = el("div", "tip");
+      tip.innerHTML = "<b>" + st.n + "</b> — durata <b>" + p.real +
+        " gg</b>, soglia <b>" + st.thr + " gg</b>" +
+        (over ? " · <span class='over'>oltre di " + (p.real - st.thr) + "</span>" : " · rientra");
+      row.appendChild(tip);
+
+      host.appendChild(row);
+    });
+  }
+
+  /* ---- dot matrix ---- */
+  function drawDots() {
+    var host = document.getElementById("dotChart");
+    var weeks = [
+      { l: "S 14", open: 3, won: 1 }, { l: "S 15", open: 3, won: 0 },
+      { l: "S 16", open: 2, won: 1 }, { l: "S 17", open: 5, won: 1 },
+      { l: "S 18", open: 2, won: 0 }, { l: "S 19", open: 6, won: 2 },
+      { l: "S 20", open: 4, won: 1 }, { l: "S 21", open: 4, won: 0 }
+    ];
+    weeks.forEach(function (w) {
+      var col = el("div", "dotcol");
+      col.appendChild(el("span", "cap", w.l));
+      for (var i = 0; i < w.open; i++) {
+        var wrap = el("div", "dotwrap");
+        var d = el("div", "dot");
+        d.style.background = i < w.won ? "var(--s7)" : "var(--s2)";
+        wrap.appendChild(d);
+        wrap.title = w.l + " · " + w.open + " trattative aperte, di cui " + w.won + " diventate clienti";
+        col.appendChild(wrap);
+      }
+      host.appendChild(col);
+    });
+  }
+
+  /* ---- tabella trattative ---- */
+  function drawDealRows() {
+    var host = document.getElementById("dealRows");
+    var rows = DEALS.filter(function (d) {
+      var t = STAGES[d.s].thr;
+      return t > 0 && d.d > t;
+    }).sort(function (a, b) { return b.d - a.d; });
+
+    rows.forEach(function (d) {
+      var st = STAGES[d.s];
+      var tr = document.createElement("tr");
+
+      var td1 = document.createElement("td");
+      var co = el("div", "co");
+      var av = el("div", "co-av", initials(d.co));
+      av.style.background = st.c;
+      co.appendChild(av);
+      var box = el("div");
+      box.appendChild(el("div", "co-n", d.co));
+      box.appendChild(el("div", "co-s", d.own));
+      co.appendChild(box);
+      td1.appendChild(co);
+      tr.appendChild(td1);
+
+      var td2 = document.createElement("td");
+      td2.textContent = d.t;
+      tr.appendChild(td2);
+
+      var td3 = document.createElement("td");
+      var chip = el("span", "chip");
+      var sq = el("i", "sq"); sq.style.background = st.c;
+      chip.appendChild(sq);
+      chip.appendChild(document.createTextNode(st.n));
+      td3.appendChild(chip);
+      tr.appendChild(td3);
+
+      var td4 = el("td", "num", d.d + " gg");
+      tr.appendChild(td4);
+
+      var td5 = el("td", "num", d.v);
+      tr.appendChild(td5);
+
+      var td6 = document.createElement("td");
+      td6.appendChild(el("span", "chip warn", "oltre di " + (d.d - st.thr) + " gg"));
+      tr.appendChild(td6);
+
+      host.appendChild(tr);
+    });
+  }
+
+  function initials(name) {
+    return name.split(" ").slice(0, 2).map(function (w) { return w[0]; }).join("").toUpperCase();
+  }
+
+  /* ---- rail ---- */
+  function drawTasks() {
+    var host = document.getElementById("railTasks");
+    TASKS.forEach(function (t) {
+      var item = el("div", "rail-item");
+      var ic = el("div", "rail-ic", t.ic);
+      ic.style.background = t.bg;
+      item.appendChild(ic);
+      var box = el("div");
+      box.appendChild(el("div", "rail-t", t.t));
+      box.appendChild(el("div", "rail-d", t.d));
+      item.appendChild(box);
+      host.appendChild(item);
+    });
+  }
+
+  /* ---- kanban con trascinamento ---- */
+  var dragIdx = null;
+
+  function drawBoard() {
+    var host = document.getElementById("board");
+    host.innerHTML = "";
+    STAGES.forEach(function (st, idx) {
+      var col = el("div", "col");
+
+      var head = el("div", "col-head");
+      var sq = el("div", "col-sq"); sq.style.background = st.c;
+      head.appendChild(sq);
+      head.appendChild(el("div", "col-n", st.n));
+      var mine = DEALS.filter(function (d) { return d.s === idx; });
+      head.appendChild(el("div", "col-c", String(mine.length)));
+      col.appendChild(head);
+
+      var body = el("div", "col-body");
+      body.dataset.stage = String(idx);
+
+      body.addEventListener("dragover", function (ev) {
+        if (dragIdx === null) return;
+        ev.preventDefault();
+        body.classList.add("over");
+      });
+      body.addEventListener("dragleave", function () { body.classList.remove("over"); });
+      body.addEventListener("drop", function (ev) {
+        ev.preventDefault();
+        body.classList.remove("over");
+        if (dragIdx === null) return;
+        var moved = DEALS[dragIdx];
+        if (moved.s !== idx) {
+          moved.s = idx;
+          moved.d = 0;          /* il contatore della fase riparte da zero */
+        }
+        dragIdx = null;
+        drawBoard();
+      });
+
+      if (!mine.length) {
+        body.appendChild(el("div", "col-empty", "Nessuna trattativa in questa fase"));
+      }
+      mine.forEach(function (d) {
+        var i = DEALS.indexOf(d);
+        var over = st.thr > 0 && d.d > st.thr;
+        var card = el("div", "deal");
+        card.style.borderLeft = "3px solid " + st.c;
+        card.draggable = true;
+        card.addEventListener("dragstart", function (ev) {
+          dragIdx = i;
+          card.classList.add("dragging");
+          if (ev.dataTransfer) ev.dataTransfer.effectAllowed = "move";
+        });
+        card.addEventListener("dragend", function () {
+          card.classList.remove("dragging");
+          dragIdx = null;
+        });
+
+        var top = el("div", "deal-top");
+        top.appendChild(el("div", "deal-co", d.co));
+        top.appendChild(el("div", "deal-v", d.v));
+        card.appendChild(top);
+
+        card.appendChild(el("div", "deal-t", d.t));
+
+        var f = el("div", "deal-f");
+        f.appendChild(el("span", over ? "chip warn" : "chip",
+          d.d === 0 ? "appena spostata" : d.d + " gg in fase"));
+        f.appendChild(el("span", "mini", d.own));
+        card.appendChild(f);
+
+        body.appendChild(card);
+      });
+      col.appendChild(body);
+      host.appendChild(col);
+    });
+  }
+
+  /* ---- percorso fasi nella scheda trattativa ---- */
+  function drawTrack() {
+    var host = document.getElementById("track");
+    /* Logistica Adriatica: fase corrente = Proposta inviata (indice 3) */
+    var done = [
+      { i: 0, d: 2 }, { i: 1, d: 9 }, { i: 2, d: 21 }, { i: 3, d: 14 }
+    ];
+    var current = 3;
+    STAGES.slice(0, 6).forEach(function (st, i) {
+      var rec = null;
+      done.forEach(function (r) { if (r.i === i) rec = r; });
+
+      var over = rec && st.thr > 0 && rec.d > st.thr;
+      var cls = "track-seg" + (rec ? (i === current ? " now" : " done") : "") + (over ? " over" : "");
+      var seg = el("div", cls);
+      seg.style.setProperty("--seg", st.c);
+      /* la larghezza del segmento è proporzionale ai giorni trascorsi */
+      seg.style.flexGrow = rec ? String(rec.d) : "1";
+      seg.appendChild(el("div", "track-bar"));
+      seg.appendChild(el("div", "track-l", st.n));
+      seg.appendChild(el("div", "track-d", rec ? rec.d + " gg" : "—"));
+      if (rec) seg.title = st.n + " · " + rec.d + " giorni" + (st.thr ? " (soglia " + st.thr + ")" : "");
+      host.appendChild(seg);
+    });
+  }
+
+  /* ---- tabella aziende ---- */
+  function drawCompanies() {
+    var host = document.getElementById("compRows");
+    COMPANIES.forEach(function (c) {
+      var tr = document.createElement("tr");
+
+      var td1 = document.createElement("td");
+      var co = el("div", "co");
+      var av = el("div", "co-av", initials(c.n));
+      av.style.background = c.c;
+      co.appendChild(av);
+      var box = el("div");
+      box.appendChild(el("div", "co-n", c.n));
+      co.appendChild(box);
+      td1.appendChild(co);
+      tr.appendChild(td1);
+
+      tr.appendChild(el("td", null, c.set));
+      tr.appendChild(el("td", null, c.f));
+      tr.appendChild(el("td", "num", String(c.d)));
+      tr.appendChild(el("td", null, c.last));
+
+      var td6 = document.createElement("td");
+      td6.appendChild(el("span", c.st === "Cliente" ? "chip won" : "chip", c.st));
+      tr.appendChild(td6);
+
+      host.appendChild(tr);
+    });
+  }
+
+  /* ---- navigazione ---- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".pill-tab"));
+  var emptyMode = false;
+
+  var EMPTY_COPY = {
+    dash: ["Il cruscotto è ancora vuoto", "I numeri compaiono da soli man mano che registri le trattative. Non serve configurare nulla."],
+    pipe: ["Non c'è ancora nessuna trattativa", "Il CRM parte vuoto: il primo record sarà un lead vero, non un dato di prova. Comincia inserendo l'azienda, poi apri la trattativa che la riguarda."],
+    deal: ["Nessuna trattativa da mostrare", "Apri una trattativa dalla pipeline per vedere qui il percorso delle fasi e la cronologia dei contatti."],
+    comp: ["Nessuna azienda in anagrafica", "L'anagrafica è il punto di partenza: ogni trattativa, documento e attività si aggancia a un'azienda."]
+  };
+
+  function show(view) {
+    tabs.forEach(function (t) {
+      t.setAttribute("aria-selected", String(t.dataset.view === view));
+    });
+    ["dash", "pipe", "deal", "comp"].forEach(function (v) {
+      document.getElementById("v-" + v).classList.remove("on");
+    });
+    var ev = document.getElementById("v-empty");
+    if (emptyMode) {
+      ev.classList.add("on");
+      document.getElementById("emptyTitle").textContent = EMPTY_COPY[view][0];
+      document.getElementById("emptyText").textContent = EMPTY_COPY[view][1];
+    } else {
+      ev.classList.remove("on");
+      document.getElementById("v-" + view).classList.add("on");
+    }
+  }
+
+  tabs.forEach(function (t) {
+    t.addEventListener("click", function () { show(t.dataset.view); });
+  });
+
+  var tgl = document.getElementById("emptyToggle");
+  tgl.addEventListener("click", function () {
+    emptyMode = !emptyMode;
+    tgl.setAttribute("aria-pressed", String(emptyMode));
+    var active = "dash";
+    tabs.forEach(function (t) { if (t.getAttribute("aria-selected") === "true") active = t.dataset.view; });
+    show(active);
+  });
+
+  /* tab secondarie (filtri) puramente visive nel prototipo */
+  document.querySelectorAll('.tabs').forEach(function (group) {
+    var inner = Array.prototype.slice.call(group.querySelectorAll(".tab"));
+    inner.forEach(function (t) {
+      t.addEventListener("click", function () {
+        inner.forEach(function (o) { o.setAttribute("aria-selected", String(o === t)); });
+      });
+    });
+  });
+
+  drawBars();
+  drawDots();
+  drawDealRows();
+  drawTasks();
+  drawBoard();
+  drawTrack();
+  drawCompanies();
+})();
+</script>

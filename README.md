@@ -5,7 +5,7 @@ post rilascio, misurando il tempo speso in ogni fase della trattativa.
 
 ## Stato
 
-Fase di progettazione. Il codice non è ancora stato scritto.
+Fase di progettazione. Interfaccia definita, applicazione non ancora sviluppata.
 
 ## Documentazione
 
@@ -14,6 +14,8 @@ Fase di progettazione. Il codice non è ancora stato scritto.
 - [Sistema visivo](docs/sistema-visivo.md) — palette, tipografia e regole d'uso,
   derivate dal logo.
 - [Token di design](docs/design-tokens.css) — gli stessi valori pronti per il codice.
+- [Prototipo di interfaccia](prototipo/interfaccia.html) — cruscotto, pipeline
+  trascinabile, scheda trattativa e anagrafica aziende, in un unico file HTML.
 
 ## Stack previsto
 

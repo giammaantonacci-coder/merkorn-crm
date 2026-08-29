@@ -43,7 +43,7 @@ alla firma, poi vira al verde-acqua quando il cliente è acquisito.
 | 1 Primo contatto | `#A868FF` | `#DEC6FF` |
 | 2 Qualificazione | `#9747FF` | `#CBA8FF` |
 | 3 Analisi requisiti | `#8A2BF2` | `#B98BFF` |
-| 4 Proposta inviata | `#7B2FE0` | `#A870FF` |
+| 4 Proposta inviata | `#7828D8` | `#A870FF` |
 | 5 Negoziazione | `#6721C4` | `#9758F0` |
 | 6 Kickoff | `#279486` | `#7FDCCC` |
 | 7 Sviluppo | `#1E8B7C` | `#5FC9B8` |
@@ -55,15 +55,42 @@ alla firma, poi vira al verde-acqua quando il cliente è acquisito.
 Tutti i valori sono verificati: testo almeno 4,5:1 sul proprio fondo, elementi
 grafici almeno 3:1, in entrambi i temi.
 
+I due estremi di ogni rampa sono passi di luminosità regolari: il viola scende da
+0,657 a 0,459 in OKLab con passi fra 0,043 e 0,059, il teal da 0,603 a 0,472. È una
+rampa **sequenziale**, non categorica: da sola non basta a distinguere le fasi, e
+infatti il nome della fase è sempre scritto accanto al colore.
+
 ## Tipografia
+
+Plus Jakarta Sans per tutta l'interfaccia: geometrica e leggermente arrotondata,
+sta bene accanto ai blocchi del logo e regge i pesi alti dei numeri. IBM Plex Mono
+solo dove le cifre devono incolonnarsi.
 
 | Ruolo | Famiglia | Specifica |
 |---|---|---|
-| Titolo pagina | Archivo 700 | 34/38, spaziatura −0,025em |
-| Titolo sezione | Archivo 600 | 21/28, spaziatura −0,015em |
-| Testo interfaccia | Source Sans 3 400 | 16/26 |
-| Dati e numeri | IBM Plex Mono 500 | cifre a larghezza fissa (`tabular-nums`) |
-| Etichette | IBM Plex Mono 400 | 11,5px, maiuscolo, spaziatura 0,12em |
+| Numero grande (KPI) | Plus Jakarta Sans 800 | 33px, spaziatura −0,035em, `tabular-nums` |
+| Titolo scheda | Plus Jakarta Sans 700 | 17,5px, spaziatura −0,02em |
+| Testo interfaccia | Plus Jakarta Sans 400 | 15px |
+| Etichette e note | Plus Jakarta Sans 500 | 13px, colore attenuato |
+| Dati e importi | IBM Plex Mono 500 | cifre a larghezza fissa (`tabular-nums`) |
+
+## Forma dell'interfaccia
+
+Angoli generosi e bordi chiarissimi al posto delle ombre: l'interfaccia è fatta di
+superfici bianche appoggiate su un fondo lavanda, non di pannelli sovrapposti.
+
+| Elemento | Valore |
+|---|---|
+| Contenitore applicazione | raggio 28px |
+| Scheda | raggio 22px, bordo 1px `#EBE7F3`, nessuna ombra |
+| Riquadro interno | raggio 16px, fondo `#F8F6FC` |
+| Scheda di trattativa | raggio 13px, filetto colorato di fase a sinistra 3px |
+| Pillole, chip, pulsanti | raggio pieno (999px) |
+| Spaziatura fra schede | 16px |
+| Pulsante principale | gradiente `#A868FF → #7828D8`, testo bianco |
+
+La navigazione principale è una riga di pillole contornate: quella attiva prende
+bordo viola, testo viola profondo e fondo velo. Nessuna barra laterale.
 
 ## Regole d'uso
 

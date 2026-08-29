@@ -32,7 +32,7 @@
   --mk-stage-1:       #A868FF;  /* primo contatto */
   --mk-stage-2:       #9747FF;  /* qualificazione */
   --mk-stage-3:       #8A2BF2;  /* analisi requisiti */
-  --mk-stage-4:       #7B2FE0;  /* proposta inviata */
+  --mk-stage-4:       #7828D8;  /* proposta inviata */
   --mk-stage-5:       #6721C4;  /* negoziazione */
 
   /* fasi di post vendita: vira al verde-acqua, il cliente è acquisito */
@@ -46,9 +46,17 @@
   --mk-stage-lost:    #BF342B;
 
   /* tipografia */
-  --mk-font-display:  "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --mk-font-body:     "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mk-font-ui:       "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
   --mk-font-mono:     "IBM Plex Mono", ui-monospace, Menlo, monospace;
+
+  /* forma dell'interfaccia */
+  --mk-radius-shell:  28px;  /* contenitore dell'applicazione */
+  --mk-radius-card:   22px;  /* schede */
+  --mk-radius-inner:  16px;  /* riquadri dentro le schede */
+  --mk-radius-item:   13px;  /* schede di trattativa, elementi minori */
+  --mk-radius-pill:   999px; /* pillole di navigazione, chip, pulsanti */
+  --mk-gap:           16px;
+  --mk-btn-gradient:  linear-gradient(135deg, #A868FF 0%, #7828D8 100%);
 }
 
 /* tema scuro di sistema — non vince su una scelta esplicita di tema chiaro */
