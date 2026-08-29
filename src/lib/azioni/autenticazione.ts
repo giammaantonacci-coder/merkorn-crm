@@ -34,11 +34,14 @@ export async function entra(_precedente: StatoModulo, modulo: FormData): Promise
     return { errore: "PIN non corretto." };
   }
 
+  // Il segreto deve essere davvero segreto: il repository e pubblico, quindi
+  // l'algoritmo si legge, e la chiave pubblica non basterebbe a proteggere nulla.
   const segreto = segretoAccessi();
   if (!segreto) {
     return {
       errore:
-        "Manca la chiave di servizio Supabase: senza, l'accesso col solo nome non può funzionare.",
+        "Manca SUPABASE_SERVICE_ROLE_KEY fra le variabili d'ambiente su Vercel. " +
+        "La trovi su Supabase, in Impostazioni > API > service_role.",
     };
   }
 
@@ -47,31 +50,11 @@ export async function entra(_precedente: StatoModulo, modulo: FormData): Promise
   const nome = nomeLeggibile(digitato);
 
   const supabase = await creaClientServer();
-  const primoTentativo = await supabase.auth.signInWithPassword({
-    email,
-    password: credenziale,
-  });
+  const accesso = await supabase.auth.signInWithPassword({ email, password: credenziale });
 
-  if (primoTentativo.error) {
-    // Prima volta che questo nome entra: la persona va creata.
-    const amministratore = creaClientAmministratore();
-    if (!amministratore) {
-      return {
-        errore:
-          "Manca la chiave di servizio Supabase: senza, non è possibile registrare una persona nuova.",
-      };
-    }
-
-    const creazione = await amministratore.auth.admin.createUser({
-      email,
-      password: credenziale,
-      email_confirm: true,
-      user_metadata: { nome },
-    });
-
-    if (creazione.error) {
-      return { errore: "Non è stato possibile registrare il nome. Riprova." };
-    }
+  if (accesso.error) {
+    const registrazione = await registraPersona(email, credenziale, nome);
+    if (registrazione) return { errore: registrazione };
 
     const secondoTentativo = await supabase.auth.signInWithPassword({
       email,
@@ -79,7 +62,7 @@ export async function entra(_precedente: StatoModulo, modulo: FormData): Promise
     });
 
     if (secondoTentativo.error) {
-      return { errore: "Non è stato possibile entrare. Riprova." };
+      return { errore: `Non è stato possibile entrare: ${secondoTentativo.error.message}` };
     }
   }
 
@@ -88,6 +71,53 @@ export async function entra(_precedente: StatoModulo, modulo: FormData): Promise
 
   revalidatePath("/", "layout");
   redirect("/");
+}
+
+/**
+ * Registra una persona al primo ingresso. Con la chiave di servizio si crea
+ * direttamente; senza, si passa dalla registrazione normale, che funziona solo
+ * se su Supabase la conferma via email e disattivata — cosa necessaria comunque,
+ * visto che questi indirizzi sono interni e non ricevono posta.
+ *
+ * Restituisce un messaggio d'errore, oppure null se e andata.
+ */
+async function registraPersona(
+  email: string,
+  credenziale: string,
+  nome: string,
+): Promise<string | null> {
+  const amministratore = creaClientAmministratore();
+
+  if (amministratore) {
+    const { error } = await amministratore.auth.admin.createUser({
+      email,
+      password: credenziale,
+      email_confirm: true,
+      user_metadata: { nome },
+    });
+    return error ? `Non e stato possibile registrare il nome: ${error.message}` : null;
+  }
+
+  const supabase = await creaClientServer();
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password: credenziale,
+    options: { data: { nome } },
+  });
+
+  if (error) {
+    return `Non e stato possibile registrare il nome: ${error.message}`;
+  }
+
+  if (!data.session) {
+    return (
+      "Il nome e stato registrato ma manca la conferma via email. Su Supabase, in " +
+      "Authentication > Sign In / Providers > Email, disattiva «Confirm email»: " +
+      "gli indirizzi qui sono interni e non ricevono posta."
+    );
+  }
+
+  return null;
 }
 
 export async function esci() {

@@ -53,7 +53,11 @@ export function chiaveDiServizio(): string | null {
 /**
  * Segreto con cui si deriva la credenziale interna di ogni persona. Chi entra
  * digita solo il nome: la password vera la calcola il server e non esiste
- * altrove. Se non lo si imposta si usa la chiave di servizio, che c'e sempre.
+ * altrove.
+ *
+ * Deve essere un valore realmente segreto. Il repository e pubblico, quindi
+ * l'algoritmo e leggibile: con la sola chiave pubblica chiunque potrebbe
+ * ricavare la credenziale di un nome e scavalcare il PIN.
  */
 export function segretoAccessi(): string | null {
   return (

@@ -21,8 +21,10 @@ Settings → Environment Variables, per tutti e tre gli ambienti:
 | Indirizzo del progetto | `NEXT_PUBLIC_SUPABASE_URL` · `SUPABASE_URL` | Supabase → Impostazioni → API → Project URL |
 | Chiave pubblica | `NEXT_PUBLIC_SUPABASE_ANON_KEY` · `SUPABASE_ANON_KEY` · `SUPABASE_PUBLISHABLE_KEY` | Supabase → Impostazioni → API |
 
-Serve inoltre `SUPABASE_SERVICE_ROLE_KEY` (impostata da sé dall'integrazione):
-è quella che permette di registrare una persona al primo accesso.
+Serve inoltre **`SUPABASE_SERVICE_ROLE_KEY`** (Supabase → Impostazioni → API →
+`service_role`). Una variabile sola, tre usi: registra la persona al primo
+ingresso, suggerisce i nomi già usati, e fa da segreto per la credenziale
+interna. Resta solo lato server e non raggiunge mai il browser.
 
 Ne basta uno per riga. L'applicazione è interamente server-side — nessun
 componente client parla con Supabase — quindi il prefisso `NEXT_PUBLIC_` non
@@ -110,6 +112,12 @@ l'identità dipende dal nome e non dal PIN.
 Il confronto avviene a tempo costante, così i tempi di risposta non rivelano
 quante cifre iniziali sono corrette. Se `ACCESSO_PIN` non è impostata il PIN
 non viene chiesto, e per entrare basta il nome.
+
+Il segreto da cui si deriva la credenziale interna deve essere davvero
+segreto: il repository è pubblico, quindi l'algoritmo è leggibile, e con la
+sola chiave pubblica chiunque potrebbe ricavare la credenziale di un nome e
+scavalcare il PIN. Per questo si usa `SUPABASE_SERVICE_ROLE_KEY` (o
+`ACCESSO_SEGRETO`, se si preferisce tenerli distinti) e mai la chiave anon.
 
 ## Cosa non c'è ancora
 
