@@ -199,10 +199,10 @@ Tutte derivate dallo storico dei passaggi, nessun inserimento aggiuntivo richies
 - **Chi accede il primo giorno** — nome ed email delle persone del team, per creare
   gli account e assegnare le trattative fin dal primo inserimento.
 
-Non c'è un portafoglio clienti da importare: il CRM nasce vuoto e il primo utilizzo
-coincide con il primo lead. Per la fase di design e per le prove si prepara una
-ventina di trattative di esempio distribuite su tutte le fasi, con storici
-plausibili, cancellabili con un comando prima della messa in produzione.
+Non c'è un portafoglio clienti da importare e non vengono creati dati di prova: il
+CRM nasce vuoto e il primo utilizzo coincide con il primo lead reale. Le uniche
+righe precaricate sono quelle di configurazione — fasi, motivi di perdita, settori,
+servizi — senza le quali l'applicazione non funzionerebbe.
 
 Il sistema visivo (palette, tipografia, regole d'uso) è in
 [docs/sistema-visivo.md](sistema-visivo.md), con i valori pronti per il codice in
