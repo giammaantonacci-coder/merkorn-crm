@@ -1,4 +1,5 @@
 import { configurazioneSupabase } from "@/lib/supabase/configurazione";
+import { creaClientAmministratore } from "@/lib/supabase/amministratore";
 import { creaClientServer } from "@/lib/supabase/server";
 import type {
   Azienda,
@@ -228,4 +229,21 @@ export async function elencoAziendeSemplice(): Promise<Pick<Azienda, "id" | "rag
   const supabase = await creaClientServer();
   const { data } = await supabase.from("aziende").select("id, ragione_sociale").order("ragione_sociale");
   return data ?? [];
+}
+
+/**
+ * I nomi gia registrati, per suggerirli in fase di accesso. Si legge senza
+ * sessione, quindi passa dal client amministratore.
+ */
+export async function personeDelTeam(): Promise<string[]> {
+  const amministratore = creaClientAmministratore();
+  if (!amministratore) return [];
+
+  const { data } = await amministratore
+    .from("profili")
+    .select("nome")
+    .eq("attivo", true)
+    .order("nome");
+
+  return (data ?? []).map((p) => p.nome);
 }

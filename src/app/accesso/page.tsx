@@ -1,14 +1,17 @@
 import { Configurazione } from "@/components/ui/Configurazione";
 import { Logo } from "@/components/ui/Logo";
 import { ModuloAccesso } from "@/app/accesso/ModuloAccesso";
-import { configurazioneSupabase } from "@/lib/supabase/configurazione";
+import { configurazioneSupabase, pinSquadra } from "@/lib/supabase/configurazione";
+import { personeDelTeam } from "@/lib/dati";
 
 export const metadata = { title: "Accesso · CRM Merkorn" };
 
 export const dynamic = "force-dynamic";
 
-export default function PaginaAccesso() {
+export default async function PaginaAccesso() {
   if (!configurazioneSupabase()) return <Configurazione />;
+
+  const persone = await personeDelTeam();
 
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-4">
@@ -25,10 +28,10 @@ export default function PaginaAccesso() {
             sempre con te
           </h1>
           <p className="mt-2.5 text-sm leading-relaxed text-muted">
-            Ogni passaggio di fase che registri qui diventa il tempo che il CRM misura per te.
+            Scrivi il tuo nome: le aziende e le trattative che registri restano collegate a te.
           </p>
 
-          <ModuloAccesso />
+          <ModuloAccesso persone={persone} chiediPin={pinSquadra() !== null} />
         </div>
       </div>
 

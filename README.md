@@ -21,6 +21,9 @@ Settings → Environment Variables, per tutti e tre gli ambienti:
 | Indirizzo del progetto | `NEXT_PUBLIC_SUPABASE_URL` · `SUPABASE_URL` | Supabase → Impostazioni → API → Project URL |
 | Chiave pubblica | `NEXT_PUBLIC_SUPABASE_ANON_KEY` · `SUPABASE_ANON_KEY` · `SUPABASE_PUBLISHABLE_KEY` | Supabase → Impostazioni → API |
 
+Serve inoltre `SUPABASE_SERVICE_ROLE_KEY` (impostata da sé dall'integrazione):
+è quella che permette di registrare una persona al primo accesso.
+
 Ne basta uno per riga. L'applicazione è interamente server-side — nessun
 componente client parla con Supabase — quindi il prefisso `NEXT_PUBLIC_` non
 serve, e vanno bene i nomi senza prefisso che imposta da sé l'integrazione
@@ -36,8 +39,8 @@ serve un nuovo deploy (Deployments → Redeploy).
    `supabase db push`).
 2. Copia `.env.example` in `.env.local` e inserisci URL e chiave pubblica del
    progetto (Impostazioni → API).
-3. Crea il primo utente da Supabase → Authentication → Add user. Il profilo nel
-   CRM nasce da solo al primo accesso.
+3. Apri l'applicazione e scrivi il tuo nome: la persona viene registrata al
+   primo ingresso, e da lì aziende e trattative restano collegate a lei.
 
 ```bash
 npm install
@@ -86,9 +89,25 @@ parte del sistema in cui un errore fa perdere dati non recuperabili.
 - [Token di design](docs/design-tokens.css) — gli stessi valori per il codice.
 - [Schermate mobile](design/mobile/) — i sorgenti dei mockup approvati.
 
+## Accesso
+
+Si entra scrivendo il proprio nome, senza email né password: è uno strumento
+interno e ogni record resta collegato alla persona che l'ha inserito. Il nome
+viene normalizzato (maiuscole, spazi e accenti non contano), così chi torna
+ritrova le proprie trattative.
+
+Sotto, l'autenticazione Supabase resta: il server ricava dal nome una identità
+stabile e ci apre una sessione vera, così i permessi di riga e la firma di ogni
+passaggio di fase continuano a funzionare. La credenziale non la sceglie e non
+la vede nessuno — viene ricalcolata dal nome a ogni accesso.
+
+**Chiunque abbia il link può entrare scrivendo un nome qualsiasi.** Se un
+giorno non va più bene, imposta `ACCESSO_PIN` su Vercel: da quel momento oltre
+al nome viene chiesto un PIN uguale per tutta la squadra, senza altre modifiche.
+
 ## Cosa non c'è ancora
 
-- Recupero password e invito di nuovi utenti dall'app (per ora si fa da Supabase)
+- Disattivare una persona dall'app (si fa da Supabase, campo `attivo`)
 - Caricamento dei documenti dall'interfaccia (la tabella e il bucket ci sono)
 - Contatti, milestone e ticket: leggibili, non ancora modificabili dall'app
 - Esportazioni dai report

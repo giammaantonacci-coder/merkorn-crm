@@ -37,6 +37,38 @@ export function configurazioneSupabase(): ConfigurazioneSupabase | null {
   return { url: url[1], chiave: chiave[1] };
 }
 
+/**
+ * Chiave di servizio: serve solo lato server, per creare la persona la prima
+ * volta che entra. L'integrazione Vercel <-> Supabase la imposta da se.
+ */
+const SERVIZIO_ACCETTATE: [string, string | undefined][] = [
+  ["SUPABASE_SERVICE_ROLE_KEY", process.env.SUPABASE_SERVICE_ROLE_KEY],
+  ["SUPABASE_SECRET_KEY", process.env.SUPABASE_SECRET_KEY],
+];
+
+export function chiaveDiServizio(): string | null {
+  return primoValorizzato(SERVIZIO_ACCETTATE)?.[1] ?? null;
+}
+
+/**
+ * Segreto con cui si deriva la credenziale interna di ogni persona. Chi entra
+ * digita solo il nome: la password vera la calcola il server e non esiste
+ * altrove. Se non lo si imposta si usa la chiave di servizio, che c'e sempre.
+ */
+export function segretoAccessi(): string | null {
+  return (
+    process.env.ACCESSO_SEGRETO ??
+    process.env.SUPABASE_JWT_SECRET ??
+    chiaveDiServizio()
+  );
+}
+
+/** PIN facoltativo di squadra: se impostato, viene chiesto oltre al nome. */
+export function pinSquadra(): string | null {
+  const pin = process.env.ACCESSO_PIN;
+  return pin && pin.trim() !== "" ? pin.trim() : null;
+}
+
 /** I nomi cercati, per spiegare all'utente cosa impostare. */
 export function nomiAccettati() {
   return {
