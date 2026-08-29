@@ -1,4 +1,4 @@
-import { createHmac } from "node:crypto";
+import { createHmac, timingSafeEqual } from "node:crypto";
 
 /**
  * Chi entra digita solo il proprio nome. Da quel nome si ricava una identita
@@ -35,4 +35,12 @@ export function nomeLeggibile(nome: string): string {
     .split(" ")
     .map((parola) => parola.charAt(0).toUpperCase() + parola.slice(1))
     .join(" ");
+}
+
+/** Confronto a tempo costante: i tempi di risposta non devono dire nulla. */
+export function pinCorrisponde(digitato: string, atteso: string): boolean {
+  const a = Buffer.from(digitato.trim());
+  const b = Buffer.from(atteso);
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(a, b);
 }

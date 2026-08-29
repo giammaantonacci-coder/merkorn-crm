@@ -101,9 +101,15 @@ stabile e ci apre una sessione vera, così i permessi di riga e la firma di ogni
 passaggio di fase continuano a funzionare. La credenziale non la sceglie e non
 la vede nessuno — viene ricalcolata dal nome a ogni accesso.
 
-**Chiunque abbia il link può entrare scrivendo un nome qualsiasi.** Se un
-giorno non va più bene, imposta `ACCESSO_PIN` su Vercel: da quel momento oltre
-al nome viene chiesto un PIN uguale per tutta la squadra, senza altre modifiche.
+Oltre al nome viene chiesto un **PIN uguale per tutta la squadra**, impostato
+nella variabile `ACCESSO_PIN`. Non sta nel codice — il repository è pubblico —
+ma solo fra le variabili d'ambiente su Vercel. Per cambiarlo basta cambiare la
+variabile e rilanciare il deploy: nessuno perde i propri dati, perché
+l'identità dipende dal nome e non dal PIN.
+
+Il confronto avviene a tempo costante, così i tempi di risposta non rivelano
+quante cifre iniziali sono corrette. Se `ACCESSO_PIN` non è impostata il PIN
+non viene chiesto, e per entrare basta il nome.
 
 ## Cosa non c'è ancora
 

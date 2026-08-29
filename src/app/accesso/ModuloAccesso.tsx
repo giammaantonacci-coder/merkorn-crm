@@ -55,7 +55,8 @@ export function ModuloAccesso({
           inputMode="numeric"
           autoComplete="off"
           required
-          placeholder="••••"
+          placeholder="••••••••"
+          nota="Lo stesso per tutti. Si scrive solo quando si entra, non a ogni apertura."
         />
       ) : null}
 

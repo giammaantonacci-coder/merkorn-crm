@@ -6,7 +6,13 @@ import { revalidatePath } from "next/cache";
 import { creaClientAmministratore } from "@/lib/supabase/amministratore";
 import { pinSquadra, segretoAccessi } from "@/lib/supabase/configurazione";
 import { creaClientServer } from "@/lib/supabase/server";
-import { chiaveNome, credenzialeInterna, emailInterna, nomeLeggibile } from "@/lib/persone";
+import {
+  chiaveNome,
+  credenzialeInterna,
+  emailInterna,
+  nomeLeggibile,
+  pinCorrisponde,
+} from "@/lib/persone";
 
 export type StatoModulo = { errore?: string };
 
@@ -24,8 +30,8 @@ export async function entra(_precedente: StatoModulo, modulo: FormData): Promise
   }
 
   const pin = pinSquadra();
-  if (pin && String(modulo.get("pin") ?? "").trim() !== pin) {
-    return { errore: "Il PIN della squadra non è corretto." };
+  if (pin && !pinCorrisponde(String(modulo.get("pin") ?? ""), pin)) {
+    return { errore: "PIN non corretto." };
   }
 
   const segreto = segretoAccessi();
