@@ -61,6 +61,30 @@ export function configurazioneSupabase(): ConfigurazioneSupabase | null {
   return { url: origine, chiave: chiave[1].trim() };
 }
 
+/** L'host a cui l'applicazione parla davvero: serve a diagnosticare gli errori. */
+export function hostSupabase(): string | null {
+  const config = configurazioneSupabase();
+  if (!config) return null;
+  try {
+    return new URL(config.url).host;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * L'URL corretto e quello delle API del progetto (`<ref>.supabase.co`), non
+ * quello della dashboard (`supabase.com/dashboard/...`): incollare il secondo e
+ * l'errore piu insidioso, perche l'app parla a supabase.com e il gateway
+ * risponde "Invalid path specified in request URL", che sembra un bug del
+ * codice invece che un indirizzo sbagliato.
+ */
+export function urlNonDelleApi(): boolean {
+  const host = hostSupabase();
+  if (!host) return false;
+  return !/\.supabase\.(co|in|red)$/i.test(host);
+}
+
 /**
  * Chiave di servizio: serve solo lato server, per creare la persona la prima
  * volta che entra. L'integrazione Vercel <-> Supabase la imposta da se.

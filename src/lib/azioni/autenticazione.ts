@@ -6,8 +6,10 @@ import { revalidatePath } from "next/cache";
 import { creaClientAmministratore } from "@/lib/supabase/amministratore";
 import {
   chiaveDiServizioSbagliata,
+  hostSupabase,
   pinSquadra,
   segretoAccessi,
+  urlNonDelleApi,
 } from "@/lib/supabase/configurazione";
 import { creaClientServer } from "@/lib/supabase/server";
 import {
@@ -47,6 +49,18 @@ export async function entra(_precedente: StatoModulo, modulo: FormData): Promise
         "Manca il segreto dell'accesso. Su Vercel imposta ACCESSO_SEGRETO con una " +
         "stringa lunga a piacere, oppure SUPABASE_SERVICE_ROLE_KEY con la chiave " +
         "segreta di Supabase.",
+    };
+  }
+
+  // "Invalid path" arriva quando l'indirizzo non e quello delle API: tipicamente
+  // e stata incollata l'URL della dashboard. Meglio dirlo prima di provare.
+  if (urlNonDelleApi()) {
+    return {
+      errore:
+        `L'indirizzo Supabase e sbagliato: l'app sta parlando con «${hostSupabase()}». ` +
+        "In NEXT_PUBLIC_SUPABASE_URL serve l'URL delle API del progetto " +
+        "(qualcosa come https://xxxx.supabase.co, da Supabase > Impostazioni > API " +
+        "> Project URL), non l'indirizzo della dashboard.",
     };
   }
 
@@ -163,7 +177,7 @@ async function registraPersona(
   problemi.push(`registrazione diretta rifiutata (${messaggio})`);
 
   return (
-    "Non e stato possibile registrare il nome. " +
+    `Non e stato possibile registrare il nome (server: ${hostSupabase()}). ` +
     problemi.join("; ") +
     ". Basta sistemare una delle due: metti la chiave segreta di Supabase in " +
     "SUPABASE_SERVICE_ROLE_KEY, oppure disattiva «Confirm email» in Authentication."
