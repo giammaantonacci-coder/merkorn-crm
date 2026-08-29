@@ -29,12 +29,36 @@ function primoValorizzato(candidati: [string, string | undefined][]) {
   return candidati.find(([, valore]) => valore && valore.trim() !== "");
 }
 
+/**
+ * Tiene solo l'origine dell'indirizzo. Una barra finale o un pezzo di percorso
+ * incollato insieme all'URL — succede copiando dalla schermata delle API —
+ * produrrebbero richieste tipo `//auth/v1/...`, che il gateway di Supabase
+ * rifiuta con "Invalid path specified in request URL": un messaggio che non
+ * fa sospettare l'indirizzo.
+ */
+export function normalizzaUrl(grezzo: string): string | null {
+  const pulito = grezzo.trim();
+  if (pulito === "") return null;
+
+  const conProtocollo = /^https?:\/\//i.test(pulito) ? pulito : `https://${pulito}`;
+
+  try {
+    return new URL(conProtocollo).origin;
+  } catch {
+    return null;
+  }
+}
+
 export function configurazioneSupabase(): ConfigurazioneSupabase | null {
   const url = primoValorizzato(URL_ACCETTATI);
   const chiave = primoValorizzato(CHIAVI_ACCETTATE);
 
   if (!url?.[1] || !chiave?.[1]) return null;
-  return { url: url[1], chiave: chiave[1] };
+
+  const origine = normalizzaUrl(url[1]);
+  if (!origine) return null;
+
+  return { url: origine, chiave: chiave[1].trim() };
 }
 
 /**
