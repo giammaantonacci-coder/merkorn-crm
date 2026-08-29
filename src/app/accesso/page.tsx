@@ -1,13 +1,14 @@
 import { Configurazione } from "@/components/ui/Configurazione";
 import { Logo } from "@/components/ui/Logo";
 import { ModuloAccesso } from "@/app/accesso/ModuloAccesso";
-import { variabiliMancanti } from "@/lib/supabase/configurazione";
+import { configurazioneSupabase } from "@/lib/supabase/configurazione";
 
 export const metadata = { title: "Accesso · CRM Merkorn" };
 
+export const dynamic = "force-dynamic";
+
 export default function PaginaAccesso() {
-  const mancanti = variabiliMancanti();
-  if (mancanti.length > 0) return <Configurazione mancanti={mancanti} />;
+  if (!configurazioneSupabase()) return <Configurazione />;
 
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-4">

@@ -4,11 +4,15 @@ import { Configurazione } from "@/components/ui/Configurazione";
 import { BarraInferiore } from "@/components/nav/BarraInferiore";
 import { BarraLaterale } from "@/components/nav/BarraLaterale";
 import { profiloCorrente } from "@/lib/dati";
-import { variabiliMancanti } from "@/lib/supabase/configurazione";
+import { configurazioneSupabase } from "@/lib/supabase/configurazione";
+
+// La configurazione va riletta a ogni richiesta: se restasse congelata nella
+// build, aggiungere le variabili su Vercel non avrebbe effetto fino alla
+// ricompilazione successiva.
+export const dynamic = "force-dynamic";
 
 export default async function LayoutApplicazione({ children }: { children: React.ReactNode }) {
-  const mancanti = variabiliMancanti();
-  if (mancanti.length > 0) return <Configurazione mancanti={mancanti} />;
+  if (!configurazioneSupabase()) return <Configurazione />;
 
   const profilo = await profiloCorrente();
   if (!profilo) redirect("/accesso");

@@ -16,10 +16,15 @@ variabili impostare, invece di una pagina bianca.
 Le due variabili sotto vanno impostate **prima** del deploy, in
 Settings → Environment Variables, per tutti e tre gli ambienti:
 
-| Variabile | Dove trovarla |
-|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Impostazioni → API → Project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → Impostazioni → API → chiave pubblica |
+| Serve | Nomi accettati | Dove trovarla |
+|---|---|---|
+| Indirizzo del progetto | `NEXT_PUBLIC_SUPABASE_URL` · `SUPABASE_URL` | Supabase → Impostazioni → API → Project URL |
+| Chiave pubblica | `NEXT_PUBLIC_SUPABASE_ANON_KEY` · `SUPABASE_ANON_KEY` · `SUPABASE_PUBLISHABLE_KEY` | Supabase → Impostazioni → API |
+
+Ne basta uno per riga. L'applicazione è interamente server-side — nessun
+componente client parla con Supabase — quindi il prefisso `NEXT_PUBLIC_` non
+serve, e vanno bene i nomi senza prefisso che imposta da sé l'integrazione
+Vercel ↔ Supabase.
 
 Le variabili non si applicano a un deploy già pubblicato: dopo averle aggiunte
 serve un nuovo deploy (Deployments → Redeploy).
