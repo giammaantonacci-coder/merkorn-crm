@@ -18,6 +18,12 @@ psql -h /var/tmp -p 5433 -U postgres -f supabase/prove/01_automatismi.sql
 psql -h /var/tmp -p 5433 -U postgres -f supabase/prove/02_profilo_autonomo.sql
 ```
 
+> **Eseguile assumendo il ruolo `authenticated`, mai come superutente.** Il
+> proprietario del database scavalca i permessi di riga, quindi una prova
+> eseguita come `postgres` non vede gli errori di policy. È esattamente così
+> che è passato inosservato un trigger che non riusciva a scrivere lo storico:
+> funzionava in prova, falliva alla prima trattativa creata dall'applicazione.
+
 Ogni riga deve rispondere `t`. Cosa viene verificato:
 
 | Prova | Cosa garantisce |
