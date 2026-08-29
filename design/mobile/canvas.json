@@ -1,16 +1,78 @@
 {
   "artboards": [
-    { "file": "Accesso.dc.html",      "x": 0,    "y": 0,    "w": 390, "h": 844, "title": "1 · Accesso" },
-    { "file": "Main.dc.html",         "x": 490,  "y": 0,    "w": 390, "h": 844, "title": "2 · Oggi" },
-    { "file": "Pipeline.dc.html",     "x": 980,  "y": 0,    "w": 390, "h": 844, "title": "3 · Pipeline" },
-    { "file": "Trattativa.dc.html",   "x": 0,    "y": 1010, "w": 390, "h": 844, "title": "4 · Scheda trattativa" },
-    { "file": "AvanzaFase.dc.html",   "x": 490,  "y": 1010, "w": 390, "h": 844, "title": "5 · Avanza di fase" },
-    { "file": "NuovaAzienda.dc.html", "x": 980,  "y": 1010, "w": 390, "h": 844, "title": "6 · Nuova azienda" }
+    {
+      "file": "Accesso.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "1 · Accesso"
+    },
+    {
+      "file": "Main.dc.html",
+      "x": 490,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "2 · Oggi"
+    },
+    {
+      "file": "Pipeline.dc.html",
+      "x": 980,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "3 · Pipeline"
+    },
+    {
+      "file": "Trattativa.dc.html",
+      "x": 0,
+      "y": 1010,
+      "w": 390,
+      "h": 844,
+      "title": "4 · Scheda trattativa"
+    },
+    {
+      "file": "AvanzaFase.dc.html",
+      "x": 490,
+      "y": 1010,
+      "w": 390,
+      "h": 844,
+      "title": "5 · Avanza di fase"
+    },
+    {
+      "file": "NuovaAzienda.dc.html",
+      "x": 980,
+      "y": 1010,
+      "w": 390,
+      "h": 844,
+      "title": "6 · Nuova azienda"
+    }
   ],
   "annotations": [
-    { "id": "nota-stile", "x": 0, "y": -190, "w": 880, "text": "Base monocroma su fondo grigio caldo, schede bianche con angoli ampi, riquadri chiari annidati.\nIl viola Merkorn compare solo dove si agisce: pulsante principale, fase scelta, voce attiva. Non colora le informazioni." },
-    { "id": "nota-semaforo", "x": 980, "y": -190, "w": 390, "text": "Le fasi ora parlano a semaforo: verde entro la soglia, giallo vicino, rosso oltre. Il colore dice se sei in tempo, non che fase è — quella è scritta." },
-    { "id": "nota-fase", "x": 490, "y": 1900, "w": 390, "text": "Cambiare fase è il gesto in cui il CRM registra il tempo: schermata dedicata, fase successiva già proposta, le due chiusure sotto in verde e rosso." }
+    {
+      "id": "nota-stile",
+      "x": 0,
+      "y": -190,
+      "w": 880,
+      "text": "Base monocroma su fondo bianco: le schede si staccano con un'ombra leggera, non con un bordo, e i riquadri chiari annidati reggono la gerarchia interna.\nIl viola Merkorn compare solo dove si agisce: pulsante principale, fase scelta, voce attiva. Non colora le informazioni."
+    },
+    {
+      "id": "nota-semaforo",
+      "x": 980,
+      "y": -190,
+      "w": 390,
+      "text": "Le fasi ora parlano a semaforo: verde entro la soglia, giallo vicino, rosso oltre. Il colore dice se sei in tempo, non che fase è — quella è scritta."
+    },
+    {
+      "id": "nota-fase",
+      "x": 490,
+      "y": 1900,
+      "w": 390,
+      "text": "Cambiare fase è il gesto in cui il CRM registra il tempo: schermata dedicata, fase successiva già proposta, le due chiusure sotto in verde e rosso."
+    }
   ],
-  "launch": { "view": "canvas" }
+  "launch": {
+    "view": "canvas"
+  }
 }

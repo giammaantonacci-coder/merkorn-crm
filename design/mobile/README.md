@@ -14,9 +14,11 @@ Sorgenti delle schermate del CRM, una per file, 390×844.
 
 ## Linguaggio visivo
 
-Base monocroma su fondo grigio caldo `#F1F1EF`, schede bianche con angoli ampi
-(22px) e riquadri chiari annidati `#F6F6F4`. Nessun bordo: separano il fondo e lo
-spazio. Tipografia Manrope, titoli in peso 800 con spaziatura stretta.
+Base monocroma su fondo bianco, schede con angoli ampi (22px) staccate da
+un'ombra leggera invece che da un bordo — `0 1px 2px rgba(22,22,26,.04)` più
+`0 6px 18px rgba(22,22,26,.07)`. Dentro le schede la gerarchia la reggono i
+riquadri chiari annidati `#F6F6F4`. Tipografia Manrope, titoli in peso 800 con
+spaziatura stretta.
 
 Il viola Merkorn `#9747FF` compare solo dove si agisce — pulsante principale, fase
 scelta, voce di menu attiva — e non colora mai un'informazione.
