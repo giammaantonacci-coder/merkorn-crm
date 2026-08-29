@@ -12,3 +12,13 @@ build/
 # canvas generato dalle schermate sorgente e catture di controllo
 design/mobile/crm-merkorn-mobile.html
 design/mobile/*.png
+
+# Next.js
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Regole per gli assistenti, rigenerate da Next a ogni build
+/AGENTS.md
+/CLAUDE.md
