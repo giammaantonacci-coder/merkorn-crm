@@ -8,3 +8,7 @@ build/
 .vercel
 *.log
 .DS_Store
+
+# canvas generato dalle schermate sorgente e catture di controllo
+design/mobile/crm-merkorn-mobile.html
+design/mobile/*.png
