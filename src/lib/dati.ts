@@ -247,3 +247,15 @@ export async function personeDelTeam(): Promise<string[]> {
 
   return (data ?? []).map((p) => p.nome);
 }
+
+/** C'e una sessione valida? Vero anche quando il profilo non esiste ancora. */
+export async function sessioneAperta(): Promise<boolean> {
+  if (nonConfigurato()) return false;
+
+  const supabase = await creaClientServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  return user !== null;
+}

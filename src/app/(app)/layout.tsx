@@ -1,9 +1,10 @@
 import { redirect } from "next/navigation";
 
+import { BaseDatiIncompleta } from "@/components/ui/BaseDatiIncompleta";
 import { Configurazione } from "@/components/ui/Configurazione";
 import { BarraInferiore } from "@/components/nav/BarraInferiore";
 import { BarraLaterale } from "@/components/nav/BarraLaterale";
-import { profiloCorrente } from "@/lib/dati";
+import { profiloCorrente, sessioneAperta } from "@/lib/dati";
 import { configurazioneSupabase } from "@/lib/supabase/configurazione";
 
 // La configurazione va riletta a ogni richiesta: se restasse congelata nella
@@ -15,7 +16,13 @@ export default async function LayoutApplicazione({ children }: { children: React
   if (!configurazioneSupabase()) return <Configurazione />;
 
   const profilo = await profiloCorrente();
-  if (!profilo) redirect("/accesso");
+
+  if (!profilo) {
+    // Autenticato ma senza profilo: rimandare al login creerebbe un rimbalzo
+    // infinito, quindi si dice cosa manca.
+    if (await sessioneAperta()) return <BaseDatiIncompleta />;
+    redirect("/accesso");
+  }
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-6xl">

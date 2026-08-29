@@ -15,6 +15,7 @@ for f in supabase/migrations/*.sql; do
   psql -h /var/tmp -p 5433 -U postgres -v ON_ERROR_STOP=1 -f "$f"
 done
 psql -h /var/tmp -p 5433 -U postgres -f supabase/prove/01_automatismi.sql
+psql -h /var/tmp -p 5433 -U postgres -f supabase/prove/02_profilo_autonomo.sql
 ```
 
 Ogni riga deve rispondere `t`. Cosa viene verificato:
@@ -30,6 +31,9 @@ Ogni riga deve rispondere `t`. Cosa viene verificato:
 | Progetto creato alla firma | Il post vendita nasce da solo, e l'azienda diventa cliente |
 | Perdita senza motivo rifiutata | Le statistiche sulle sconfitte restano aggregabili |
 | Tempi per fase misurati | La vista di ricalibrazione delle soglie funziona |
+| Crea il proprio profilo | Chi entra funziona anche se il trigger non c'è |
+| Non crea quello di altri | Il nome non permette di impersonare nessuno |
+| Accede ai dati dopo il profilo | Privilegi e policy insieme lasciano lavorare |
 
 `00_scheletro_supabase.sql` ricrea solo il minimo di Supabase che serve alle
 migrazioni (`auth.users`, `auth.uid()`, storage, ruoli): in produzione quelle

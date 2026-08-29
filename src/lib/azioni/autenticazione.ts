@@ -71,8 +71,28 @@ export async function entra(_precedente: StatoModulo, modulo: FormData): Promise
     }
   }
 
-  // Il nome mostrato segue sempre l'ultima grafia digitata.
-  await supabase.from("profili").update({ nome }).eq("email", email);
+  // Il profilo lo crea un trigger sulla base dati, ma non diamolo per scontato:
+  // se manca, chi entra resterebbe autenticato e senza accesso a nulla.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    const { error } = await supabase
+      .from("profili")
+      .upsert({ id: user.id, nome, email, attivo: true }, { onConflict: "id" });
+
+    if (error) {
+      if (error.code === "42P01") {
+        return {
+          errore:
+            "La base dati non e ancora predisposta: applica i file in " +
+            "supabase/migrations dal SQL Editor di Supabase, in ordine numerico.",
+        };
+      }
+      return { errore: `Entrato, ma il profilo non e stato creato: ${error.message}` };
+    }
+  }
 
   revalidatePath("/", "layout");
   redirect("/");
