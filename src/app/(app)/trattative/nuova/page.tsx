@@ -23,7 +23,7 @@ export default async function PaginaNuovaTrattativa({
       <IntestazioneIndietro titolo="Pipeline" href="/pipeline" />
 
       <div className="px-4">
-        <div className="px-2 pb-4">
+        <div className="pb-4">
           <h1 className="titolo text-[27px]">Nuova trattativa</h1>
           <p className="mt-1.5 text-sm leading-relaxed text-muted">
             Nasce in «Primo contatto»: da qui parte il conteggio dell&apos;intero ciclo.

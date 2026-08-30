@@ -5,17 +5,24 @@ import { Scheda, Riquadro, TitoloScheda } from "@/components/ui/Scheda";
 import { Pastiglia, Punto } from "@/components/ui/Pastiglia";
 import { PulsanteLink } from "@/components/ui/Pulsante";
 import { Vuoto } from "@/components/ui/Vuoto";
-import { profiloCorrente, scadenzeDiOggi, trattativeAperte, trattativeOltreSoglia } from "@/lib/dati";
+import {
+  noteAperte,
+  profiloCorrente,
+  scadenzeDiOggi,
+  trattativeAperte,
+  trattativeOltreSoglia,
+} from "@/lib/dati";
 import { dataLunga, giorniBrevi, ora, sforamento } from "@/lib/formato";
 
 export const metadata = { title: "Oggi · CRM Merkorn" };
 
 export default async function PaginaOggi() {
-  const [profilo, daRichiamare, aperte, scadenze] = await Promise.all([
+  const [profilo, daRichiamare, aperte, scadenze, note] = await Promise.all([
     profiloCorrente(),
     trattativeOltreSoglia(),
     trattativeAperte(),
     scadenzeDiOggi(),
+    noteAperte(),
   ]);
 
   const quante = daRichiamare.length;
@@ -25,7 +32,7 @@ export default async function PaginaOggi() {
       <Intestazione nome={profilo?.nome ?? "Merkorn"} />
 
       <div className="flex flex-col gap-3 px-4">
-        <div className="px-2 pb-2 pt-1">
+        <div className="pb-2 pt-1">
           <h1 className="titolo text-[27px]">
             {aperte.length === 0
               ? "Non c'è ancora nessuna trattativa"
@@ -115,6 +122,33 @@ export default async function PaginaOggi() {
                     {s.trattative ? (
                       <span className="truncate text-[13px] text-muted">{s.trattative.titolo}</span>
                     ) : null}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Scheda>
+
+        <Scheda>
+          <div className="mb-3.5 flex items-center justify-between gap-3">
+            <TitoloScheda>Note in comune</TitoloScheda>
+            <Link href="/note" className="text-[13px] font-bold text-arancio-deep">
+              Apri la bacheca
+            </Link>
+          </div>
+
+          {note.length === 0 ? (
+            <p className="text-sm text-muted">
+              Nessuna nota aperta. Usa la bacheca per i promemoria di squadra.
+            </p>
+          ) : (
+            <ul className="flex flex-col gap-2.5">
+              {note.slice(0, 4).map((n) => (
+                <li key={n.id} className="flex items-start gap-3 rounded-2xl bg-panel p-4">
+                  <span aria-hidden className="mt-1 size-2.5 shrink-0 rounded-full bg-arancio" />
+                  <span className="flex min-w-0 flex-col gap-0.5">
+                    <span className="text-[15px] font-semibold leading-snug">{n.testo}</span>
+                    <span className="text-[12.5px] text-muted">{n.autore?.nome ?? "—"}</span>
                   </span>
                 </li>
               ))}

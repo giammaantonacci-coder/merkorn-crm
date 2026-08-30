@@ -23,7 +23,7 @@ export default async function PaginaAziende({
       <Intestazione nome={profilo?.nome ?? "Merkorn"} />
 
       <div className="flex flex-col gap-3 px-4">
-        <div className="flex items-center justify-between gap-3 px-2 pb-1">
+        <div className="flex items-center justify-between gap-3 pb-1">
           <h1 className="titolo text-[27px]">Aziende</h1>
           <PulsanteLink href="/aziende/nuova" className="h-11 px-5 text-sm">
             Nuova

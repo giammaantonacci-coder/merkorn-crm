@@ -7,6 +7,7 @@ import type {
   Azienda,
   Fase,
   MotivoPerdita,
+  Nota,
   Profilo,
   Servizio,
   Settore,
@@ -248,6 +249,25 @@ export async function personeDelTeam(): Promise<string[]> {
     .order("nome");
 
   return (data ?? []).map((p) => p.nome);
+}
+
+export type NotaConAutore = Nota & { autore: { nome: string } | null };
+
+/** Bacheca condivisa: le aperte in cima, poi per data. */
+export async function noteCondivise(): Promise<NotaConAutore[]> {
+  if (nonConfigurato()) return [];
+  const supabase = await creaClientServer();
+  const { data } = await supabase
+    .from("note")
+    .select("*, autore:profili(nome)")
+    .order("completata")
+    .order("creata_il", { ascending: false });
+  return (data ?? []) as NotaConAutore[];
+}
+
+/** Le sole note aperte, per l'anteprima nella schermata Oggi. */
+export async function noteAperte(): Promise<NotaConAutore[]> {
+  return (await noteCondivise()).filter((n) => !n.completata);
 }
 
 /** C'e una sessione valida? Vero anche quando il profilo non esiste ancora. */

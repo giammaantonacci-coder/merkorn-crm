@@ -212,6 +212,16 @@ export type Ticket = {
   assegnato_a: string | null;
 };
 
+export type Nota = {
+  id: string;
+  testo: string;
+  autore_id: string | null;
+  completata: boolean;
+  completata_il: string | null;
+  creata_il: string;
+  aggiornata_il: string;
+};
+
 /** Vista: stato vivo della trattativa, con giorni in fase e semaforo. */
 export type TrattativaStato = {
   id: string;
@@ -374,6 +384,16 @@ type RelProgetti = [
   },
 ];
 
+type RelNote = [
+  {
+    foreignKeyName: "note_autore_id_fkey";
+    columns: ["autore_id"];
+    isOneToOne: false;
+    referencedRelation: "profili";
+    referencedColumns: ["id"];
+  },
+];
+
 type RelAttivita = [
   {
     foreignKeyName: "attivita_trattativa_id_fkey";
@@ -409,6 +429,7 @@ export type Database = {
       progetti: Tabella<Progetto, "azienda_id" | "nome", RelProgetti>;
       milestone: Tabella<Milestone, "progetto_id" | "nome">;
       ticket: Tabella<Ticket, "progetto_id" | "titolo">;
+      note: Tabella<Nota, "testo", RelNote>;
     };
     Views: {
       v_trattative_stato: { Row: TrattativaStato; Relationships: [] };

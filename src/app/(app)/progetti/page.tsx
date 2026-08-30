@@ -1,10 +1,10 @@
 import Link from "next/link";
 
-import { Intestazione } from "@/components/nav/Intestazione";
+import { IntestazioneIndietro } from "@/components/nav/Intestazione";
 import { Scheda } from "@/components/ui/Scheda";
 import { Pastiglia } from "@/components/ui/Pastiglia";
 import { Vuoto } from "@/components/ui/Vuoto";
-import { profiloCorrente, progetti } from "@/lib/dati";
+import { progetti } from "@/lib/dati";
 import { dataBreve, ETICHETTE_PROGETTO, euro } from "@/lib/formato";
 
 export const metadata = { title: "Progetti · CRM Merkorn" };
@@ -17,14 +17,14 @@ function scadenzaVicina(data: string | null) {
 }
 
 export default async function PaginaProgetti() {
-  const [profilo, elenco] = await Promise.all([profiloCorrente(), progetti()]);
+  const elenco = await progetti();
 
   return (
     <>
-      <Intestazione nome={profilo?.nome ?? "Merkorn"} />
+      <IntestazioneIndietro titolo="Progetti" href="/altro" />
 
       <div className="flex flex-col gap-3 px-4">
-        <h1 className="titolo px-2 pb-1 text-[27px]">Progetti</h1>
+        <h1 className="titolo pb-1 text-[27px]">Progetti</h1>
 
         {elenco.length === 0 ? (
           <Scheda className="px-0 py-0">

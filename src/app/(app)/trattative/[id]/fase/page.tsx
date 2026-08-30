@@ -30,7 +30,7 @@ export default async function PaginaAvanzaFase({
       <IntestazioneIndietro titolo={dettaglio.aziende?.ragione_sociale ?? "Trattativa"} href={`/trattative/${id}`} />
 
       <div className="px-4">
-        <div className="px-2 pb-4">
+        <div className="pb-4">
           <h1 className="titolo text-[25px]">Dove va adesso?</h1>
           <p className="mt-1.5 text-sm leading-relaxed text-muted">
             I {stato.giorni_in_fase} giorni passati in «{stato.fase_nome}» restano registrati.

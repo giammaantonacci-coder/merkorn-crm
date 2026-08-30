@@ -1,16 +1,16 @@
 import Link from "next/link";
 
-import { Intestazione } from "@/components/nav/Intestazione";
+import { IntestazioneIndietro } from "@/components/nav/Intestazione";
 import { Scheda, TitoloScheda } from "@/components/ui/Scheda";
 import { Pastiglia } from "@/components/ui/Pastiglia";
 import { Vuoto } from "@/components/ui/Vuoto";
-import { profiloCorrente, scadenzeAperte } from "@/lib/dati";
+import { scadenzeAperte } from "@/lib/dati";
 import { dataBreve, ora } from "@/lib/formato";
 
 export const metadata = { title: "Agenda · CRM Merkorn" };
 
 export default async function PaginaAgenda() {
-  const [profilo, scadenze] = await Promise.all([profiloCorrente(), scadenzeAperte()]);
+  const scadenze = await scadenzeAperte();
 
   const adesso = new Date();
   const fineOggi = new Date();
@@ -30,10 +30,10 @@ export default async function PaginaAgenda() {
 
   return (
     <>
-      <Intestazione nome={profilo?.nome ?? "Merkorn"} />
+      <IntestazioneIndietro titolo="Agenda" href="/altro" />
 
       <div className="flex flex-col gap-3 px-4">
-        <h1 className="titolo px-2 pb-1 text-[27px]">Agenda</h1>
+        <h1 className="titolo pb-1 text-[27px]">Agenda</h1>
 
         {scadenze.length === 0 ? (
           <Scheda className="px-0 py-0">

@@ -10,6 +10,7 @@ import { iniziali } from "@/lib/formato";
 export const metadata = { title: "Altro · CRM Merkorn" };
 
 const VOCI = [
+  { href: "/note", etichetta: "Note in comune", nota: "Bacheca condivisa del team" },
   { href: "/agenda", etichetta: "Agenda", nota: "Scadenze e prossime azioni" },
   { href: "/progetti", etichetta: "Progetti", nota: "Clienti già rilasciati e contratti" },
   { href: "/report", etichetta: "Report", nota: "Tempi per fase e tasso di successo" },
@@ -24,7 +25,7 @@ export default async function PaginaAltro() {
       <Intestazione nome={profilo?.nome ?? "Merkorn"} />
 
       <div className="flex flex-col gap-3 px-4">
-        <h1 className="titolo px-2 pb-1 text-[27px]">Altro</h1>
+        <h1 className="titolo pb-1 text-[27px]">Altro</h1>
 
         <Scheda className="flex items-center gap-3.5">
           <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-arancio text-sm font-bold text-white">

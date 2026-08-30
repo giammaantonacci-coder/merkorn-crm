@@ -18,7 +18,7 @@ export default async function PaginaAttivita({ params }: { params: Promise<{ id:
         href={`/trattative/${id}`}
       />
       <div className="px-4">
-        <div className="px-2 pb-4">
+        <div className="pb-4">
           <h1 className="titolo text-[25px]">Cosa è successo?</h1>
           <p className="mt-1.5 text-sm leading-relaxed text-muted">
             Resta nella storia dell&apos;azienda e aggiorna la data di ultimo contatto.

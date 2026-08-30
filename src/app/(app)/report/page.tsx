@@ -1,14 +1,13 @@
-import { Intestazione } from "@/components/nav/Intestazione";
+import { IntestazioneIndietro } from "@/components/nav/Intestazione";
 import { Scheda, Riquadro, TitoloScheda, SottoTitolo } from "@/components/ui/Scheda";
 import { Vuoto } from "@/components/ui/Vuoto";
-import { profiloCorrente, tempiPerFase, trattativeAperte, trattativeChiuse } from "@/lib/dati";
+import { tempiPerFase, trattativeAperte, trattativeChiuse } from "@/lib/dati";
 import { euro, giorniBrevi } from "@/lib/formato";
 
 export const metadata = { title: "Report · CRM Merkorn" };
 
 export default async function PaginaReport() {
-  const [profilo, tempi, aperte, chiuse] = await Promise.all([
-    profiloCorrente(),
+  const [tempi, aperte, chiuse] = await Promise.all([
     tempiPerFase(),
     trattativeAperte(),
     trattativeChiuse(),
@@ -24,10 +23,10 @@ export default async function PaginaReport() {
 
   return (
     <>
-      <Intestazione nome={profilo?.nome ?? "Merkorn"} />
+      <IntestazioneIndietro titolo="Report" href="/altro" />
 
       <div className="flex flex-col gap-3 px-4">
-        <h1 className="titolo px-2 pb-1 text-[27px]">Report</h1>
+        <h1 className="titolo pb-1 text-[27px]">Report</h1>
 
         <Scheda className="flex flex-col gap-4">
           <div className="flex items-center justify-between gap-4">

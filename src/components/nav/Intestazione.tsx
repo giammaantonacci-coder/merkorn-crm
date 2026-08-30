@@ -8,7 +8,7 @@ import { iniziali } from "@/lib/formato";
 
 export function Intestazione({ nome, azione }: { nome: string; azione?: ReactNode }) {
   return (
-    <header className="safe-top flex items-center justify-between px-5 pb-4 md:pt-7">
+    <header className="safe-top flex items-center justify-between px-4 pb-4 md:pt-7">
       <Link href="/" className="flex items-center gap-2.5 md:invisible">
         <Logo className="w-6 text-arancio-vivo" />
         <span className="text-[15px] font-extrabold tracking-[-0.02em]">Merkorn</span>
@@ -37,7 +37,7 @@ export function IntestazioneIndietro<T extends string>({
   href: Route<T> | UrlObject;
 }) {
   return (
-    <header className="safe-top flex items-center gap-3.5 px-5 pb-4 md:pt-7">
+    <header className="safe-top flex items-center gap-3.5 px-4 pb-4 md:pt-7">
       <Link
         href={href}
         aria-label="Torna indietro"

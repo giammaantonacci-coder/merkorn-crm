@@ -34,7 +34,7 @@ export default async function PaginaPipeline() {
       <Intestazione nome={profilo?.nome ?? "Merkorn"} />
 
       <div className="flex flex-col gap-3 px-4">
-        <div className="flex items-center justify-between gap-3 px-2 pb-1">
+        <div className="flex items-center justify-between gap-3 pb-1">
           <h1 className="titolo text-[27px]">Pipeline</h1>
           <PulsanteLink href="/trattative/nuova" className="h-11 px-5 text-sm">
             Nuova

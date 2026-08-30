@@ -1,7 +1,7 @@
-import { Intestazione } from "@/components/nav/Intestazione";
+import { IntestazioneIndietro } from "@/components/nav/Intestazione";
 import { Scheda, Riquadro, TitoloScheda, SottoTitolo } from "@/components/ui/Scheda";
 import { Pastiglia } from "@/components/ui/Pastiglia";
-import { fasi, motiviPerdita, profiloCorrente, tempiPerFase } from "@/lib/dati";
+import { fasi, motiviPerdita, tempiPerFase } from "@/lib/dati";
 import { giorniBrevi } from "@/lib/formato";
 
 export const metadata = { title: "Impostazioni · CRM Merkorn" };
@@ -9,8 +9,7 @@ export const metadata = { title: "Impostazioni · CRM Merkorn" };
 const SOGLIA_CAMPIONE = 20;
 
 export default async function PaginaImpostazioni() {
-  const [profilo, elencoFasi, tempi, motivi] = await Promise.all([
-    profiloCorrente(),
+  const [elencoFasi, tempi, motivi] = await Promise.all([
     fasi(),
     tempiPerFase(),
     motiviPerdita(),
@@ -21,10 +20,10 @@ export default async function PaginaImpostazioni() {
 
   return (
     <>
-      <Intestazione nome={profilo?.nome ?? "Merkorn"} />
+      <IntestazioneIndietro titolo="Impostazioni" href="/altro" />
 
       <div className="flex flex-col gap-3 px-4">
-        <h1 className="titolo px-2 pb-1 text-[27px]">Impostazioni</h1>
+        <h1 className="titolo pb-1 text-[27px]">Impostazioni</h1>
 
         <Scheda>
           <TitoloScheda>Fasi e soglie</TitoloScheda>
