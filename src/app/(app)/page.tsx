@@ -4,6 +4,7 @@ import { Intestazione } from "@/components/nav/Intestazione";
 import { Scheda, TitoloScheda } from "@/components/ui/Scheda";
 import { PulsanteLink } from "@/components/ui/Pulsante";
 import { Vuoto } from "@/components/ui/Vuoto";
+import { NoteInComune } from "@/components/note/NoteInComune";
 import {
   fasiPipeline,
   noteAperte,
@@ -138,32 +139,7 @@ export default async function PaginaOggi() {
           )}
         </Scheda>
 
-        <Scheda>
-          <div className="mb-3.5 flex items-center justify-between gap-3">
-            <TitoloScheda>Note in comune</TitoloScheda>
-            <Link href="/note" className="text-[13px] font-bold text-arancio-deep">
-              Apri la bacheca
-            </Link>
-          </div>
-
-          {note.length === 0 ? (
-            <p className="text-sm text-muted">
-              Nessuna nota aperta. Usa la bacheca per i promemoria di squadra.
-            </p>
-          ) : (
-            <ul className="flex flex-col gap-2.5">
-              {note.slice(0, 4).map((n) => (
-                <li key={n.id} className="flex items-start gap-3 rounded-2xl bg-panel p-4">
-                  <span aria-hidden className="mt-1 size-2.5 shrink-0 rounded-full bg-arancio" />
-                  <span className="flex min-w-0 flex-col gap-0.5">
-                    <span className="text-[15px] font-semibold leading-snug">{n.testo}</span>
-                    <span className="text-[12.5px] text-muted">{n.autore?.nome ?? "—"}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </Scheda>
+        <NoteInComune note={note} autore={profilo?.nome ?? "—"} />
       </div>
     </>
   );
