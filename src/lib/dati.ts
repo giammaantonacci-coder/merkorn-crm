@@ -273,21 +273,33 @@ export async function personeTaggabili(): Promise<Menzione[]> {
 export async function noteCondivise(): Promise<NotaConAutore[]> {
   if (nonConfigurato()) return [];
   const supabase = await creaClientServer();
-  const { data } = await supabase
+
+  const { data: righe } = await supabase
     .from("note")
-    .select("*, autore:profili(nome), note_menzioni(persona:profili(id, nome))")
+    .select("*, autore:profili(nome)")
     .order("completata")
     .order("creata_il", { ascending: false });
+  const note = righe ?? [];
+  if (note.length === 0) return [];
 
-  return (data ?? []).map((riga) => {
-    const { note_menzioni, ...resto } = riga as typeof riga & {
-      note_menzioni: { persona: Menzione | null }[] | null;
-    };
-    return {
-      ...resto,
-      menzioni: (note_menzioni ?? []).map((m) => m.persona).filter((p): p is Menzione => !!p),
-    };
-  }) as NotaConAutore[];
+  // Le menzioni in una query separata: se questa fallisse (es. cache dello
+  // schema non ancora ricaricata), le note restano visibili senza chip, invece
+  // di far sparire l'intera bacheca.
+  const { data: legami } = await supabase
+    .from("note_menzioni")
+    .select("note_id, persona:profili(id, nome)")
+    .in(
+      "note_id",
+      note.map((n) => n.id),
+    );
+
+  const perNota = new Map<string, Menzione[]>();
+  for (const l of (legami ?? []) as { note_id: string; persona: Menzione | null }[]) {
+    if (!l.persona) continue;
+    perNota.set(l.note_id, [...(perNota.get(l.note_id) ?? []), l.persona]);
+  }
+
+  return note.map((n) => ({ ...n, menzioni: perNota.get(n.id) ?? [] })) as NotaConAutore[];
 }
 
 /** Le sole note aperte, per l'anteprima nella schermata Oggi. */

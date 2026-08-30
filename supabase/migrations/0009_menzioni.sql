@@ -20,3 +20,7 @@ create policy membri_note_menzioni on note_menzioni
   for all to authenticated using (e_membro_attivo()) with check (e_membro_attivo());
 
 grant select, insert, update, delete on note_menzioni to authenticated, service_role;
+
+-- Fa conoscere subito la nuova tabella all'API: senza, i primi insert/lettura
+-- delle menzioni fallirebbero finché la cache dello schema non si ricarica.
+notify pgrst, 'reload schema';
