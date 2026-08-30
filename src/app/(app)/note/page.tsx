@@ -1,11 +1,15 @@
 import { IntestazioneIndietro } from "@/components/nav/Intestazione";
 import { Bacheca } from "@/components/note/Bacheca";
-import { noteCondivise } from "@/lib/dati";
+import { noteCondivise, personeTaggabili, profiloCorrente } from "@/lib/dati";
 
 export const metadata = { title: "Note in comune · Merkorn CRM" };
 
 export default async function PaginaNote() {
-  const note = await noteCondivise();
+  const [note, persone, profilo] = await Promise.all([
+    noteCondivise(),
+    personeTaggabili(),
+    profiloCorrente(),
+  ]);
 
   return (
     <>
@@ -19,7 +23,12 @@ export default async function PaginaNote() {
           </p>
         </div>
 
-        <Bacheca note={note} />
+        <Bacheca
+          note={note}
+          persone={persone}
+          ioId={profilo?.id ?? null}
+          ioNome={profilo?.nome ?? null}
+        />
       </div>
     </>
   );

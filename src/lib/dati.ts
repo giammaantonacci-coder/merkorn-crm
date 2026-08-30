@@ -251,18 +251,43 @@ export async function personeDelTeam(): Promise<string[]> {
   return (data ?? []).map((p) => p.nome);
 }
 
-export type NotaConAutore = Nota & { autore: { nome: string } | null };
+export type Menzione = { id: string; nome: string };
+export type NotaConAutore = Nota & {
+  autore: { nome: string } | null;
+  menzioni: Menzione[];
+};
 
-/** Bacheca condivisa: le aperte in cima, poi per data. */
+/** Le persone taggabili in una nota: i membri attivi, id e nome. */
+export async function personeTaggabili(): Promise<Menzione[]> {
+  if (nonConfigurato()) return [];
+  const supabase = await creaClientServer();
+  const { data } = await supabase
+    .from("profili")
+    .select("id, nome")
+    .eq("attivo", true)
+    .order("nome");
+  return data ?? [];
+}
+
+/** Bacheca condivisa: le aperte in cima, poi per data. Con le persone taggate. */
 export async function noteCondivise(): Promise<NotaConAutore[]> {
   if (nonConfigurato()) return [];
   const supabase = await creaClientServer();
   const { data } = await supabase
     .from("note")
-    .select("*, autore:profili(nome)")
+    .select("*, autore:profili(nome), note_menzioni(persona:profili(id, nome))")
     .order("completata")
     .order("creata_il", { ascending: false });
-  return (data ?? []) as NotaConAutore[];
+
+  return (data ?? []).map((riga) => {
+    const { note_menzioni, ...resto } = riga as typeof riga & {
+      note_menzioni: { persona: Menzione | null }[] | null;
+    };
+    return {
+      ...resto,
+      menzioni: (note_menzioni ?? []).map((m) => m.persona).filter((p): p is Menzione => !!p),
+    };
+  }) as NotaConAutore[];
 }
 
 /** Le sole note aperte, per l'anteprima nella schermata Oggi. */

@@ -3,6 +3,9 @@
 import { revalidatePath } from "next/cache";
 
 import { creaClientServer } from "@/lib/supabase/server";
+import { personeMenzionate } from "@/lib/menzioni";
+
+type ClientServer = Awaited<ReturnType<typeof creaClientServer>>;
 
 export type StatoModulo = { errore?: string };
 
@@ -19,18 +22,36 @@ function aggiorna() {
   revalidatePath("/");
 }
 
+/**
+ * Allinea le menzioni di una nota al suo testo: legge i «@Nome» presenti tra i
+ * membri attivi e riscrive le righe di note_menzioni. La verità è il testo,
+ * così la modifica di una nota aggiorna da sola chi la riguarda.
+ */
+async function sincronizzaMenzioni(supabase: ClientServer, noteId: string, testo: string) {
+  const { data } = await supabase.from("profili").select("id, nome").eq("attivo", true);
+  const ids = personeMenzionate(testo, data ?? []).map((p) => p.id);
+
+  await supabase.from("note_menzioni").delete().eq("note_id", noteId);
+  if (ids.length > 0) {
+    await supabase
+      .from("note_menzioni")
+      .insert(ids.map((profilo_id) => ({ note_id: noteId, profilo_id })));
+  }
+}
+
 export async function creaNota(_precedente: StatoModulo, modulo: FormData): Promise<StatoModulo> {
   const testo = String(modulo.get("testo") ?? "").trim();
   if (!testo) return { errore: "Scrivi la nota prima di aggiungerla." };
 
   const { supabase, user } = await utente();
-  const { error } = await supabase.from("note").insert({
-    testo,
-    autore_id: user?.id ?? null,
-    completata: false,
-  });
+  const { data, error } = await supabase
+    .from("note")
+    .insert({ testo, autore_id: user?.id ?? null, completata: false })
+    .select("id")
+    .single();
 
-  if (error) return { errore: "Non è stato possibile salvare la nota. Riprova." };
+  if (error || !data) return { errore: "Non è stato possibile salvare la nota. Riprova." };
+  await sincronizzaMenzioni(supabase, data.id, testo);
   aggiorna();
   return {};
 }
@@ -48,6 +69,7 @@ export async function modificaNota(_precedente: StatoModulo, modulo: FormData): 
     .eq("id", id);
 
   if (error) return { errore: "La modifica non è andata a buon fine. Riprova." };
+  await sincronizzaMenzioni(supabase, id, testo);
   aggiorna();
   return {};
 }

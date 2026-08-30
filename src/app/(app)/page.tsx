@@ -8,6 +8,7 @@ import { NoteInComune } from "@/components/note/NoteInComune";
 import {
   fasiPipeline,
   noteAperte,
+  personeTaggabili,
   profiloCorrente,
   scadenzeDiOggi,
   trattativeAperte,
@@ -18,13 +19,14 @@ import { dataLunga, euro, LIVELLO_PRIORITA, ora, perPriorita } from "@/lib/forma
 export const metadata = { title: "Oggi · CRM Merkorn" };
 
 export default async function PaginaOggi() {
-  const [profilo, daRichiamare, aperte, fasi, scadenze, note] = await Promise.all([
+  const [profilo, daRichiamare, aperte, fasi, scadenze, note, persone] = await Promise.all([
     profiloCorrente(),
     trattativeOltreSoglia(),
     trattativeAperte(),
     fasiPipeline(),
     scadenzeDiOggi(),
     noteAperte(),
+    personeTaggabili(),
   ]);
 
   const quante = daRichiamare.length;
@@ -139,7 +141,7 @@ export default async function PaginaOggi() {
           )}
         </Scheda>
 
-        <NoteInComune note={note} autore={profilo?.nome ?? "—"} />
+        <NoteInComune note={note} autore={profilo?.nome ?? "—"} persone={persone} />
       </div>
     </>
   );

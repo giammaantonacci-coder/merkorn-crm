@@ -4,19 +4,28 @@ import Link from "next/link";
 import { useActionState, useOptimistic, useRef, useState } from "react";
 
 import { creaNota, type StatoModulo } from "@/lib/azioni/note";
-import { AreaTesto } from "@/components/ui/Campo";
 import { Errore } from "@/components/ui/Errore";
 import { Pulsante } from "@/components/ui/Pulsante";
 import { Scheda, TitoloScheda } from "@/components/ui/Scheda";
+import { EditorNota } from "@/components/note/EditorNota";
+import { TestoConMenzioni } from "@/components/note/TestoConMenzioni";
+import { personeMenzionate, type Persona } from "@/lib/menzioni";
 import type { NotaConAutore } from "@/lib/dati";
 
 /**
  * Anteprima delle note nella Home con composer al volo: il «+» apre un campo
- * per scrivere subito una nota condivisa, senza passare dalla bacheca. La nota
- * appena scritta compare in cima all'istante (ottimistica) col nome di chi la
- * scrive; il link alla bacheca resta in fondo a destra.
+ * per scrivere subito una nota condivisa, dove si può taggare un collega con
+ * «@Nome». La nota compare in cima all'istante col nome di chi la scrive.
  */
-export function NoteInComune({ note, autore }: { note: NotaConAutore[]; autore: string }) {
+export function NoteInComune({
+  note,
+  autore,
+  persone,
+}: {
+  note: NotaConAutore[];
+  autore: string;
+  persone: Persona[];
+}) {
   const [aperto, setAperto] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -33,6 +42,7 @@ export function NoteInComune({ note, autore }: { note: NotaConAutore[]; autore: 
         creata_il: adesso,
         aggiornata_il: adesso,
         autore: { nome: autore },
+        menzioni: personeMenzionate(testo, persone),
       };
       return [bozza, ...stato];
     },
@@ -42,7 +52,7 @@ export function NoteInComune({ note, autore }: { note: NotaConAutore[]; autore: 
     const testo = String(modulo.get("testo") ?? "").trim();
     if (!testo) return { errore: "Scrivi la nota prima di aggiungerla." };
 
-    aggiungiOttimista(testo); // compare subito in cima
+    aggiungiOttimista(testo);
     const esito = await creaNota(prec, modulo);
     if (!esito.errore) {
       formRef.current?.reset();
@@ -78,11 +88,12 @@ export function NoteInComune({ note, autore }: { note: NotaConAutore[]; autore: 
 
       {aperto ? (
         <form ref={formRef} action={azione} className="mb-3.5 flex flex-col gap-2.5">
-          <AreaTesto
-            etichetta="Nuova nota"
+          <EditorNota
             name="testo"
-            required
-            placeholder="Controllare scadenza fabbrica auto…"
+            etichetta="Nuova nota"
+            persone={persone}
+            placeholder="Controllare la fabbrica con @Nome…"
+            autoFocus
           />
           <Errore messaggio={stato.errore} />
           <div className="flex gap-2.5">
@@ -111,7 +122,12 @@ export function NoteInComune({ note, autore }: { note: NotaConAutore[]; autore: 
             <li key={n.id} className="flex items-start gap-3 rounded-2xl bg-panel p-4">
               <span aria-hidden className="mt-1 size-2.5 shrink-0 rounded-full bg-arancio" />
               <span className="flex min-w-0 flex-col gap-0.5">
-                <span className="text-[15px] font-semibold leading-snug">{n.testo}</span>
+                <TestoConMenzioni
+                  testo={n.testo}
+                  nomi={n.menzioni.map((m) => m.nome)}
+                  ioNome={autore}
+                  className="text-[15px] font-semibold leading-snug"
+                />
                 <span className="text-[12.5px] text-muted">{n.autore?.nome ?? "—"}</span>
               </span>
             </li>

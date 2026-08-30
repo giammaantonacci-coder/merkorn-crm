@@ -1,6 +1,6 @@
 "use client";
 
-import { useOptimistic, useRef, useState, useTransition } from "react";
+import { useOptimistic, useState, useTransition } from "react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 
@@ -11,12 +11,14 @@ import {
   modificaNota,
   type StatoModulo,
 } from "@/lib/azioni/note";
-import { AreaTesto } from "@/components/ui/Campo";
 import { Errore } from "@/components/ui/Errore";
 import { Pulsante } from "@/components/ui/Pulsante";
 import { Scheda, TitoloScheda } from "@/components/ui/Scheda";
 import { Vuoto } from "@/components/ui/Vuoto";
+import { EditorNota } from "@/components/note/EditorNota";
+import { TestoConMenzioni } from "@/components/note/TestoConMenzioni";
 import { dataBreve } from "@/lib/formato";
+import type { Persona } from "@/lib/menzioni";
 import type { NotaConAutore } from "@/lib/dati";
 
 function BottoneAggiungi() {
@@ -28,12 +30,23 @@ function BottoneAggiungi() {
   );
 }
 
-export function Bacheca({ note }: { note: NotaConAutore[] }) {
-  const formRef = useRef<HTMLFormElement>(null);
+export function Bacheca({
+  note,
+  persone,
+  ioId,
+  ioNome,
+}: {
+  note: NotaConAutore[];
+  persone: Persona[];
+  ioId: string | null;
+  ioNome: string | null;
+}) {
+  // Rimonta l'editor dopo un salvataggio riuscito, per svuotarlo.
+  const [chiave, setChiave] = useState(0);
   const [statoAggiungi, azioneAggiungi] = useActionState<StatoModulo, FormData>(
     async (prec, modulo) => {
       const esito = await creaNota(prec, modulo);
-      if (!esito.errore) formRef.current?.reset();
+      if (!esito.errore) setChiave((k) => k + 1);
       return esito;
     },
     {},
@@ -52,6 +65,7 @@ export function Bacheca({ note }: { note: NotaConAutore[] }) {
   );
 
   const [, transizione] = useTransition();
+  const [soloMie, setSoloMie] = useState(false);
 
   function segna(id: string, completata: boolean) {
     transizione(async () => {
@@ -67,30 +81,49 @@ export function Bacheca({ note }: { note: NotaConAutore[] }) {
     });
   }
 
-  const aperte = ottimiste.filter((n) => !n.completata);
-  const fatte = ottimiste.filter((n) => n.completata);
+  const miRiguarda = (n: NotaConAutore) => !!ioId && n.menzioni.some((m) => m.id === ioId);
+  const quanteMieTotali = ottimiste.filter(miRiguarda).length;
+  const visibili = soloMie ? ottimiste.filter(miRiguarda) : ottimiste;
+  const aperte = visibili.filter((n) => !n.completata);
+  const fatte = visibili.filter((n) => n.completata);
 
   return (
     <div className="flex flex-col gap-3">
       <Scheda>
-        <form ref={formRef} action={azioneAggiungi} className="flex flex-col gap-3">
-          <AreaTesto
-            etichetta="Nuova nota"
+        <form action={azioneAggiungi} className="flex flex-col gap-3">
+          <EditorNota
+            key={chiave}
             name="testo"
-            required
-            placeholder="Controllare scadenza fabbrica auto…"
+            etichetta="Nuova nota"
+            persone={persone}
+            placeholder="Controllare la fabbrica con @Nome…"
           />
           <Errore messaggio={statoAggiungi.errore} />
           <BottoneAggiungi />
         </form>
       </Scheda>
 
+      {ioId && quanteMieTotali > 0 ? (
+        <div className="flex gap-2">
+          <FiltroPill attivo={!soloMie} onClick={() => setSoloMie(false)}>
+            Tutte
+          </FiltroPill>
+          <FiltroPill attivo={soloMie} onClick={() => setSoloMie(true)}>
+            Mi riguardano · {quanteMieTotali}
+          </FiltroPill>
+        </div>
+      ) : null}
+
       {ottimiste.length === 0 ? (
         <Scheda className="px-0 py-0">
           <Vuoto
             titolo="La bacheca è vuota"
-            testo="Scrivi la prima nota qui sopra: la vedono tutti, con il nome di chi l'ha scritta."
+            testo="Scrivi la prima nota qui sopra: la vedono tutti, con il nome di chi l'ha scritta. Tagga un collega con «@Nome»."
           />
+        </Scheda>
+      ) : visibili.length === 0 ? (
+        <Scheda className="px-0 py-0">
+          <Vuoto titolo="Nessuna nota ti riguarda" testo="Non ci sono note che ti menzionano." />
         </Scheda>
       ) : (
         <>
@@ -99,7 +132,14 @@ export function Bacheca({ note }: { note: NotaConAutore[] }) {
               <TitoloScheda className="mb-3.5">Da fare</TitoloScheda>
               <ul className="flex flex-col gap-2.5">
                 {aperte.map((n) => (
-                  <Riga key={n.id} nota={n} onSegna={segna} onRimuovi={rimuovi} />
+                  <Riga
+                    key={n.id}
+                    nota={n}
+                    persone={persone}
+                    ioNome={ioNome}
+                    onSegna={segna}
+                    onRimuovi={rimuovi}
+                  />
                 ))}
               </ul>
             </Scheda>
@@ -110,7 +150,14 @@ export function Bacheca({ note }: { note: NotaConAutore[] }) {
               <TitoloScheda className="mb-3.5">Completate</TitoloScheda>
               <ul className="flex flex-col gap-2.5">
                 {fatte.map((n) => (
-                  <Riga key={n.id} nota={n} onSegna={segna} onRimuovi={rimuovi} />
+                  <Riga
+                    key={n.id}
+                    nota={n}
+                    persone={persone}
+                    ioNome={ioNome}
+                    onSegna={segna}
+                    onRimuovi={rimuovi}
+                  />
                 ))}
               </ul>
             </Scheda>
@@ -121,12 +168,39 @@ export function Bacheca({ note }: { note: NotaConAutore[] }) {
   );
 }
 
+function FiltroPill({
+  attivo,
+  onClick,
+  children,
+}: {
+  attivo: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={attivo}
+      className={`rounded-full px-4 py-2 text-[13px] font-bold transition-colors ${
+        attivo ? "bg-arancio text-white" : "bg-panel text-ink-soft"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
 function Riga({
   nota,
+  persone,
+  ioNome,
   onSegna,
   onRimuovi,
 }: {
   nota: NotaConAutore;
+  persone: Persona[];
+  ioNome: string | null;
   onSegna: (id: string, completata: boolean) => void;
   onRimuovi: (id: string) => void;
 }) {
@@ -145,7 +219,12 @@ function Riga({
       <li>
         <form action={azioneModifica} className="flex flex-col gap-2.5 rounded-2xl bg-panel p-4">
           <input type="hidden" name="id" value={nota.id} />
-          <AreaTesto etichetta="Modifica nota" name="testo" defaultValue={nota.testo} required />
+          <EditorNota
+            name="testo"
+            etichetta="Modifica nota"
+            persone={persone}
+            defaultValue={nota.testo}
+          />
           <Errore messaggio={statoModifica.errore} />
           <div className="flex gap-2.5">
             <Pulsante type="submit" className="h-11 flex-1 px-4 text-sm">
@@ -185,13 +264,14 @@ function Riga({
       </button>
 
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-        <p
+        <TestoConMenzioni
+          testo={nota.testo}
+          nomi={nota.menzioni.map((m) => m.nome)}
+          ioNome={ioNome}
           className={`text-[15px] leading-snug ${
             nota.completata ? "text-muted line-through" : "font-semibold text-ink"
           }`}
-        >
-          {nota.testo}
-        </p>
+        />
         <div className="flex items-center gap-2 text-[12.5px] text-muted">
           <span className="font-semibold">{nota.autore?.nome ?? "—"}</span>
           <span aria-hidden>·</span>
