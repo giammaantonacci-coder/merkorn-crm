@@ -27,7 +27,7 @@ export default async function PaginaAltro() {
         <h1 className="titolo px-2 pb-1 text-[27px]">Altro</h1>
 
         <Scheda className="flex items-center gap-3.5">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-viola text-sm font-bold text-white">
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-arancio text-sm font-bold text-white">
             {iniziali(profilo?.nome ?? "Merkorn")}
           </span>
           <span className="flex min-w-0 flex-col gap-0.5">

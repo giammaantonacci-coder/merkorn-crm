@@ -52,7 +52,7 @@ export function ModuloFase({
     if (fase.ambito === "uscita") {
       return attiva ? "bg-ink text-white" : "bg-panel text-ink-soft";
     }
-    return attiva ? "bg-viola text-white" : "bg-panel text-ink";
+    return attiva ? "bg-arancio text-white" : "bg-panel text-ink";
   }
 
   return (

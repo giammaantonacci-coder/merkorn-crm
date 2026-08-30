@@ -23,7 +23,7 @@ export function BarraLaterale() {
   return (
     <aside className="hidden w-60 shrink-0 flex-col gap-1 border-r border-line px-4 py-7 md:flex">
       <Link href="/" className="mb-6 flex items-center gap-2.5 px-3">
-        <Logo className="w-6 text-viola" />
+        <Logo className="w-6 text-arancio-vivo" />
         <span className="text-base font-extrabold tracking-[-0.02em]">Merkorn</span>
       </Link>
 
@@ -35,7 +35,7 @@ export function BarraLaterale() {
             href={voce.href}
             aria-current={attiva ? "page" : undefined}
             className={`rounded-full px-4 py-2.5 text-[15px] font-semibold transition-colors ${
-              attiva ? "bg-viola-wash text-viola-deep" : "text-ink-soft hover:bg-panel"
+              attiva ? "bg-arancio-wash text-arancio-deep" : "text-ink-soft hover:bg-panel"
             }`}
           >
             {voce.etichetta}

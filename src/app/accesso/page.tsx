@@ -16,7 +16,7 @@ export default async function PaginaAccesso() {
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-4">
       <div className="safe-top flex items-center gap-2.5 px-2">
-        <Logo className="w-[26px] text-viola" />
+        <Logo className="w-[26px] text-arancio-vivo" />
         <span className="text-base font-extrabold tracking-[-0.02em]">Merkorn</span>
       </div>
 

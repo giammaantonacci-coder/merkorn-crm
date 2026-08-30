@@ -76,7 +76,7 @@ export function BarraInferiore() {
             href={voce.href}
             aria-current={attiva ? "page" : undefined}
             className={`flex min-h-[44px] w-20 flex-col items-center gap-1.5 pt-1 ${
-              attiva ? "text-viola" : "text-muted"
+              attiva ? "text-arancio" : "text-muted"
             }`}
           >
             {voce.icona}

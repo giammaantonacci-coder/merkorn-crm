@@ -79,7 +79,7 @@ export function ScelteRapide({
       {opzioni.map((o) => (
         <label
           key={o.valore}
-          className="cursor-pointer rounded-full bg-panel px-4 py-2.5 text-sm font-semibold text-ink transition-colors has-[:checked]:bg-viola has-[:checked]:text-white"
+          className="cursor-pointer rounded-full bg-panel px-4 py-2.5 text-sm font-semibold text-ink transition-colors has-[:checked]:bg-arancio has-[:checked]:text-white"
         >
           <input
             type="radio"

@@ -86,7 +86,7 @@ export default async function PaginaOggi() {
 
             <Link
               href="/pipeline"
-              className="mt-4 block py-1.5 text-center text-sm font-bold text-viola-deep"
+              className="mt-4 block py-1.5 text-center text-sm font-bold text-arancio-deep"
             >
               Vedi tutte le {aperte.length} aperte
             </Link>
@@ -105,7 +105,7 @@ export default async function PaginaOggi() {
             <ul className="flex flex-col divide-y divide-line">
               {scadenze.slice(0, 6).map((s) => (
                 <li key={s.id} className="flex items-center gap-4 py-3.5 first:pt-0 last:pb-0">
-                  <span className="w-12 shrink-0 text-[15px] font-bold text-viola">
+                  <span className="w-12 shrink-0 text-[15px] font-bold text-arancio">
                     {ora(s.scade_il)}
                   </span>
                   <span className="flex min-w-0 flex-col gap-0.5">

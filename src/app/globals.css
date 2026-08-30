@@ -3,7 +3,7 @@
 /*
  * Sistema visivo del CRM Merkorn.
  * Fondo bianco, schede staccate da un'ombra leggera, riquadri chiari annidati.
- * Il viola segnala dove si agisce; le fasi parlano a semaforo.
+ * L'arancione segnala dove si agisce; le fasi parlano a semaforo.
  */
 @theme {
   --color-ink: #16161a;
@@ -13,10 +13,13 @@
   --color-panel: #f6f6f4;
   --color-surface: #ffffff;
 
-  --color-viola: #9747ff;
-  --color-viola-deep: #7b2fe0;
-  --color-viola-ink: #6721c4;
-  --color-viola-wash: #f3ebff;
+  /* accento: l'arancione dell'icona, scurito quel tanto che basta a reggere il
+     testo bianco sui pulsanti; il "vivo" resta per i soli elementi grafici */
+  --color-arancio: #c2410c;
+  --color-arancio-vivo: #ea580c;
+  --color-arancio-deep: #9a3412;
+  --color-arancio-ink: #7c2d12;
+  --color-arancio-wash: #feebdd;
 
   --color-ok: #1b7a4b;
   --color-ok-dot: #229160;

@@ -40,7 +40,7 @@ export default async function PaginaAziende({
             type="search"
             defaultValue={cerca ?? ""}
             placeholder="Cerca per nome…"
-            className="h-12 w-full rounded-full bg-panel px-5 text-base text-ink outline-none placeholder:text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-viola-ink"
+            className="h-12 w-full rounded-full bg-panel px-5 text-base text-ink outline-none placeholder:text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-arancio-ink"
           />
         </form>
 

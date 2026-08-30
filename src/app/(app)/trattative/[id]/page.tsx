@@ -97,7 +97,7 @@ export default async function PaginaTrattativa({
               <a
                 href={`tel:${referente.telefono}`}
                 aria-label={`Chiama ${referente.nome}`}
-                className="flex size-11 shrink-0 items-center justify-center rounded-full bg-viola text-white"
+                className="flex size-11 shrink-0 items-center justify-center rounded-full bg-arancio text-white"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -178,7 +178,7 @@ export default async function PaginaTrattativa({
           <Riquadro className="text-sm text-muted">
             Trattativa chiusa come <b className="font-bold text-ink">{dettaglio.esito}</b> il{" "}
             {dataBreve(dettaglio.chiusura_effettiva)}.{" "}
-            <Link href="/pipeline" className="font-bold text-viola-deep">
+            <Link href="/pipeline" className="font-bold text-arancio-deep">
               Torna alla pipeline
             </Link>
           </Riquadro>

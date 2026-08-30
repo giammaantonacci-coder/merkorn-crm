@@ -134,7 +134,7 @@ export default async function PaginaAzienda({ params }: { params: Promise<{ id: 
                     <a
                       href={`tel:${c.telefono}`}
                       aria-label={`Chiama ${c.nome}`}
-                      className="flex size-11 shrink-0 items-center justify-center rounded-full bg-viola-wash text-viola-deep"
+                      className="flex size-11 shrink-0 items-center justify-center rounded-full bg-arancio-wash text-arancio-deep"
                     >
                       <svg
                         viewBox="0 0 24 24"

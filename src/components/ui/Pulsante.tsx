@@ -6,7 +6,7 @@ import type { UrlObject } from "url";
 type Variante = "principale" | "secondario" | "scuro";
 
 const STILI: Record<Variante, string> = {
-  principale: "bg-viola text-white",
+  principale: "bg-arancio text-white",
   secondario:
     "bg-surface text-ink shadow-[0_1px_2px_rgb(22_22_26/0.04),0_6px_18px_rgb(22_22_26/0.07)]",
   scuro: "bg-ink text-white",
@@ -15,7 +15,7 @@ const STILI: Record<Variante, string> = {
 const BASE =
   "inline-flex h-[54px] min-h-[44px] items-center justify-center rounded-full px-6 text-[15px] font-bold " +
   "transition-opacity active:opacity-80 disabled:cursor-not-allowed disabled:opacity-50 " +
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-viola-ink";
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-arancio-ink";
 
 export function Pulsante({
   variante = "principale",
