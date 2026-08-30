@@ -282,21 +282,32 @@ export async function noteCondivise(): Promise<NotaConAutore[]> {
   const note = righe ?? [];
   if (note.length === 0) return [];
 
-  // Le menzioni in una query separata: se questa fallisse (es. cache dello
-  // schema non ancora ricaricata), le note restano visibili senza chip, invece
-  // di far sparire l'intera bacheca.
+  // Le menzioni in query separate e senza embed (né reverse né forward): così
+  // nessuna relazione "incorporata" può far fallire la lettura e svuotare la
+  // bacheca. Se qualcosa qui va storto, le note restano visibili senza chip.
   const { data: legami } = await supabase
     .from("note_menzioni")
-    .select("note_id, persona:profili(id, nome)")
+    .select("note_id, profilo_id")
     .in(
       "note_id",
       note.map((n) => n.id),
     );
 
+  const righeLegami = legami ?? [];
+  const nomePerId = new Map<string, string>();
+  if (righeLegami.length > 0) {
+    const { data: persone } = await supabase
+      .from("profili")
+      .select("id, nome")
+      .in("id", [...new Set(righeLegami.map((l) => l.profilo_id))]);
+    for (const p of persone ?? []) nomePerId.set(p.id, p.nome);
+  }
+
   const perNota = new Map<string, Menzione[]>();
-  for (const l of (legami ?? []) as { note_id: string; persona: Menzione | null }[]) {
-    if (!l.persona) continue;
-    perNota.set(l.note_id, [...(perNota.get(l.note_id) ?? []), l.persona]);
+  for (const l of righeLegami) {
+    const nome = nomePerId.get(l.profilo_id);
+    if (!nome) continue;
+    perNota.set(l.note_id, [...(perNota.get(l.note_id) ?? []), { id: l.profilo_id, nome }]);
   }
 
   return note.map((n) => ({ ...n, menzioni: perNota.get(n.id) ?? [] })) as NotaConAutore[];
