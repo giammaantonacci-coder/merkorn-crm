@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Intestazione } from "@/components/nav/Intestazione";
 import { Scheda, TitoloScheda } from "@/components/ui/Scheda";
 import { Pastiglia, Punto } from "@/components/ui/Pastiglia";
-import { PulsanteLink } from "@/components/ui/Pulsante";
+import { PulsanteLink, PulsantePiu } from "@/components/ui/Pulsante";
 import { Vuoto } from "@/components/ui/Vuoto";
 import { fasiPipeline, profiloCorrente, trattativeAperte } from "@/lib/dati";
 import { euro, giorniBrevi, sforamento } from "@/lib/formato";
@@ -36,9 +36,7 @@ export default async function PaginaPipeline() {
       <div className="flex flex-col gap-3 px-4">
         <div className="flex items-center justify-between gap-3 pb-1">
           <h1 className="titolo text-[27px]">Pipeline</h1>
-          <PulsanteLink href="/trattative/nuova" className="h-11 px-5 text-sm">
-            Nuova
-          </PulsanteLink>
+<PulsantePiu href="/trattative/nuova" label="Nuova trattativa" />
         </div>
 
         {aperte.length === 0 ? (

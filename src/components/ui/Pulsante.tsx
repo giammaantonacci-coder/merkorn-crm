@@ -13,7 +13,7 @@ const STILI: Record<Variante, string> = {
 };
 
 const BASE =
-  "inline-flex h-[54px] min-h-[44px] items-center justify-center rounded-full px-6 text-[15px] font-bold " +
+  "inline-flex h-[46px] min-h-[44px] items-center justify-center rounded-full px-6 text-[15px] font-bold " +
   "transition-opacity active:opacity-80 disabled:cursor-not-allowed disabled:opacity-50 " +
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-arancio-ink";
 
@@ -39,6 +39,28 @@ export function PulsanteLink<T extends string>({
   return (
     <Link href={href} className={`${BASE} ${STILI[variante]} ${className}`}>
       {children}
+    </Link>
+  );
+}
+
+/** Pulsante tondo con il segno «+»: azione di aggiunta nelle intestazioni. */
+export function PulsantePiu<T extends string>({
+  href,
+  label,
+}: {
+  href: Route<T> | UrlObject;
+  label: string;
+}) {
+  return (
+    <Link
+      href={href}
+      aria-label={label}
+      title={label}
+      className="flex size-11 shrink-0 items-center justify-center rounded-full bg-arancio text-white transition-opacity active:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-arancio-ink"
+    >
+      <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" aria-hidden>
+        <path d="M12 5v14M5 12h14" />
+      </svg>
     </Link>
   );
 }

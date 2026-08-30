@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Intestazione } from "@/components/nav/Intestazione";
 import { Scheda } from "@/components/ui/Scheda";
 import { Pastiglia } from "@/components/ui/Pastiglia";
-import { PulsanteLink } from "@/components/ui/Pulsante";
+import { PulsanteLink, PulsantePiu } from "@/components/ui/Pulsante";
 import { Vuoto } from "@/components/ui/Vuoto";
 import { aziende, profiloCorrente } from "@/lib/dati";
 import { dataBreve, ETICHETTE_STATO_AZIENDA, iniziali } from "@/lib/formato";
@@ -25,9 +25,7 @@ export default async function PaginaAziende({
       <div className="flex flex-col gap-3 px-4">
         <div className="flex items-center justify-between gap-3 pb-1">
           <h1 className="titolo text-[27px]">Aziende</h1>
-          <PulsanteLink href="/aziende/nuova" className="h-11 px-5 text-sm">
-            Nuova
-          </PulsanteLink>
+<PulsantePiu href="/aziende/nuova" label="Nuova azienda" />
         </div>
 
         <form action="/aziende" className="px-1">
