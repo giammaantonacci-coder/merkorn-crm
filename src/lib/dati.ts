@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 import { configurazioneSupabase } from "@/lib/supabase/configurazione";
 import { creaClientAmministratore } from "@/lib/supabase/amministratore";
 import { creaClientServer } from "@/lib/supabase/server";
@@ -22,7 +24,7 @@ function nonConfigurato() {
   return configurazioneSupabase() === null;
 }
 
-export async function profiloCorrente(): Promise<Profilo | null> {
+export const profiloCorrente = cache(async function profiloCorrente(): Promise<Profilo | null> {
   if (nonConfigurato()) return null;
 
   const supabase = await creaClientServer();
@@ -33,7 +35,7 @@ export async function profiloCorrente(): Promise<Profilo | null> {
 
   const { data } = await supabase.from("profili").select("*").eq("id", user.id).single();
   return data ?? null;
-}
+});
 
 export async function fasi(): Promise<Fase[]> {
   if (nonConfigurato()) return [];
@@ -249,7 +251,7 @@ export async function personeDelTeam(): Promise<string[]> {
 }
 
 /** C'e una sessione valida? Vero anche quando il profilo non esiste ancora. */
-export async function sessioneAperta(): Promise<boolean> {
+export const sessioneAperta = cache(async function sessioneAperta(): Promise<boolean> {
   if (nonConfigurato()) return false;
 
   const supabase = await creaClientServer();
@@ -258,4 +260,4 @@ export async function sessioneAperta(): Promise<boolean> {
   } = await supabase.auth.getUser();
 
   return user !== null;
-}
+});

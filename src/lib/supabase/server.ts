@@ -1,10 +1,11 @@
+import { cache } from "react";
 import { cookies } from "next/headers";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 
 import { configurazioneSupabase } from "@/lib/supabase/configurazione";
 import type { Database } from "@/lib/database.types";
 
-export async function creaClientServer() {
+export const creaClientServer = cache(async function creaClientServer() {
   const config = configurazioneSupabase();
   if (!config) {
     throw new Error(
@@ -35,4 +36,4 @@ export async function creaClientServer() {
       },
     },
   );
-}
+});
