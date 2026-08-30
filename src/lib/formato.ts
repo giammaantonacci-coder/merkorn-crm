@@ -1,4 +1,4 @@
-import type { Semaforo } from "@/lib/database.types";
+import type { Semaforo, TrattativaStato } from "@/lib/database.types";
 
 const EURO = new Intl.NumberFormat("it-IT", {
   style: "currency",
@@ -66,6 +66,63 @@ export function sforamento(giorniInFase: number, soglia: number | null) {
   if (soglia === null) return null;
   const oltre = giorniInFase - soglia;
   return oltre > 0 ? oltre : null;
+}
+
+// --------------------------------------------------------------- priorità
+
+export type Livello = "alta" | "media" | "bassa";
+
+export type TrattativaConPriorita = TrattativaStato & {
+  punteggio: number;
+  livello: Livello;
+};
+
+/**
+ * Ogni fase avvicina alla firma: chi è più avanti pesa di più. La spinta del
+ * semaforo tiene alte le trattative che stanno anche sforando i tempi.
+ */
+const SPINTA_SEMAFORO: Record<Semaforo, number> = {
+  oltre: 1,
+  vicino: 0.55,
+  in_tempo: 0.15,
+  neutro: 0.15,
+};
+
+export const LIVELLO_PRIORITA: Record<Livello, { etichetta: string; classe: string }> = {
+  alta: { etichetta: "Alta", classe: "bg-arancio text-white" },
+  media: { etichetta: "Media", classe: "bg-arancio-wash text-arancio-deep" },
+  bassa: { etichetta: "Bassa", classe: "bg-panel text-muted" },
+};
+
+/**
+ * Ordina le trattative aperte per importanza: quanto valgono e a che punto
+ * sono. Il valore è rapportato alla trattativa più ricca del momento, così la
+ * classifica ha senso anche con pochi clienti e si riequilibra da sola quando
+ * ne arrivano altri. «ordineMassimo» è l'ordine dell'ultima fase prima della
+ * firma: dà la posizione assoluta nella pipeline, non relativa alle presenti.
+ */
+export function perPriorita(
+  aperte: TrattativaStato[],
+  ordineMassimo: number,
+): TrattativaConPriorita[] {
+  const valoreMassimo = Math.max(1, ...aperte.map((t) => t.valore_stimato ?? 0));
+  const scala = Math.max(1, ordineMassimo);
+
+  return aperte
+    .map((t) => {
+      const valore = (t.valore_stimato ?? 0) / valoreMassimo;
+      const avanzamento = Math.min(1, t.fase_ordine / scala);
+      const punteggio =
+        0.5 * valore + 0.35 * avanzamento + 0.15 * SPINTA_SEMAFORO[t.semaforo];
+      const livello: Livello = punteggio >= 0.6 ? "alta" : punteggio >= 0.35 ? "media" : "bassa";
+      return { ...t, punteggio, livello };
+    })
+    .sort(
+      (a, b) =>
+        b.punteggio - a.punteggio ||
+        (b.valore_stimato ?? 0) - (a.valore_stimato ?? 0) ||
+        b.giorni_in_fase - a.giorni_in_fase,
+    );
 }
 
 export const ETICHETTE_FONTE: Record<string, string> = {
