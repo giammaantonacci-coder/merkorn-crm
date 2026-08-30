@@ -66,9 +66,12 @@ export default async function PaginaImpostazioni() {
 
         <Scheda>
           <TitoloScheda className="mb-3.5">Motivi di perdita</TitoloScheda>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap justify-center gap-2">
             {motivi.map((m) => (
-              <span key={m.id} className="rounded-full bg-panel px-4 py-2 text-sm font-semibold">
+              <span
+                key={m.id}
+                className="rounded-full bg-panel px-4 py-2 text-[13.5px] font-semibold text-ink-soft"
+              >
                 {m.nome}
               </span>
             ))}
