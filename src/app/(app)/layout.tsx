@@ -28,7 +28,7 @@ export default async function LayoutApplicazione({ children }: { children: React
     <div className="mx-auto flex min-h-dvh w-full max-w-6xl">
       <BarraLaterale />
       <div className="flex min-h-dvh min-w-0 flex-1 flex-col">
-        <main className="flex-1 pb-6">{children}</main>
+        <main className="flex-1 pb-28 md:pb-6">{children}</main>
         <BarraInferiore />
       </div>
     </div>
