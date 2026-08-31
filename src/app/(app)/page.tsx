@@ -15,7 +15,7 @@ import {
   trattativeAperte,
   trattativeOltreSoglia,
 } from "@/lib/dati";
-import { dataBreve, dataLunga, euro, giorniBrevi, ora, perPriorita } from "@/lib/formato";
+import { dataBreve, dataLunga, euro, giorniBrevi, LIVELLO_PRIORITA, ora, perPriorita } from "@/lib/formato";
 
 export const metadata = { title: "Oggi · CRM Merkorn" };
 
@@ -89,16 +89,25 @@ export default async function PaginaOggi() {
             <ol className="flex flex-col gap-2.5">
               {perImportanza.slice(0, 5).map((t) => {
                 const raggiunte = fasiFirma.filter((f) => f.ordine <= t.fase_ordine).length;
+                const prossimaFase = fasiFirma.find((f) => f.ordine > t.fase_ordine);
                 const prossima = prossimaAzione.get(t.id);
+                const livello = LIVELLO_PRIORITA[t.livello];
                 return (
                   <li key={t.id}>
                     <Link
                       href={`/trattative/${t.id}`}
                       className="block rounded-2xl bg-panel p-4 active:opacity-80"
                     >
-                      <div className="flex items-baseline justify-between gap-3">
-                        <span className="truncate text-[15.5px] font-bold tracking-[-0.015em]">
-                          {t.ragione_sociale}
+                      <div className="flex items-baseline justify-between gap-2.5">
+                        <span className="flex min-w-0 items-center gap-2">
+                          <span className="truncate text-[15.5px] font-bold tracking-[-0.015em]">
+                            {t.ragione_sociale}
+                          </span>
+                          <span
+                            className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-extrabold ${livello.classe}`}
+                          >
+                            {livello.etichetta}
+                          </span>
                         </span>
                         <span className="shrink-0 text-[15px] font-extrabold tabular-nums">
                           {euro(t.valore_stimato)}
@@ -106,32 +115,41 @@ export default async function PaginaOggi() {
                       </div>
 
                       <div className="mt-0.5 text-[13px] text-muted">
-                        {t.fase_nome} · {giorniBrevi(t.giorni_in_fase)}
+                        {giorniBrevi(t.giorni_in_fase)} in questa fase
                       </div>
 
                       {fasiFirma.length > 1 ? (
-                        <div className="mt-3 flex items-center gap-2">
-                          <div className="flex flex-1 items-center gap-1">
-                            {fasiFirma.map((f, idx) => {
-                              const fatta = f.ordine <= t.fase_ordine;
-                              return (
-                                <Fragment key={f.id}>
-                                  {idx > 0 ? (
+                        <>
+                          <div className="mt-3 flex items-center gap-2">
+                            <div className="flex flex-1 items-center gap-1">
+                              {fasiFirma.map((f, idx) => {
+                                const fatta = f.ordine <= t.fase_ordine;
+                                return (
+                                  <Fragment key={f.id}>
+                                    {idx > 0 ? (
+                                      <span
+                                        className={`h-[3px] flex-1 rounded-full ${fatta ? "bg-arancio" : "bg-line"}`}
+                                      />
+                                    ) : null}
                                     <span
-                                      className={`h-[3px] flex-1 rounded-full ${fatta ? "bg-arancio" : "bg-line"}`}
+                                      className={`size-2.5 shrink-0 rounded-full ${fatta ? "bg-arancio" : "bg-line"}`}
                                     />
-                                  ) : null}
-                                  <span
-                                    className={`size-2.5 shrink-0 rounded-full ${fatta ? "bg-arancio" : "bg-line"}`}
-                                  />
-                                </Fragment>
-                              );
-                            })}
+                                  </Fragment>
+                                );
+                              })}
+                            </div>
+                            <span className="shrink-0 text-[11px] font-bold tabular-nums text-muted">
+                              {raggiunte}/{fasiFirma.length}
+                            </span>
                           </div>
-                          <span className="shrink-0 text-[11px] font-bold tabular-nums text-muted">
-                            {raggiunte}/{fasiFirma.length}
-                          </span>
-                        </div>
+
+                          <div className="mt-2 text-[12.5px] font-bold">
+                            <span className="text-arancio-deep">{t.fase_nome}</span>
+                            {prossimaFase ? (
+                              <span className="font-semibold text-muted"> → {prossimaFase.nome}</span>
+                            ) : null}
+                          </div>
+                        </>
                       ) : null}
 
                       {prossima ? (

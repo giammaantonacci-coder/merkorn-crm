@@ -91,7 +91,7 @@ const SPINTA_SEMAFORO: Record<Semaforo, number> = {
 export const LIVELLO_PRIORITA: Record<Livello, { etichetta: string; classe: string }> = {
   alta: { etichetta: "Alta", classe: "bg-arancio text-white" },
   media: { etichetta: "Media", classe: "bg-arancio-wash text-arancio-deep" },
-  bassa: { etichetta: "Bassa", classe: "bg-panel text-muted" },
+  bassa: { etichetta: "Bassa", classe: "bg-line text-ink-soft" },
 };
 
 /**
