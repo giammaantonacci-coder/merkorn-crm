@@ -274,9 +274,12 @@ export async function noteCondivise(): Promise<NotaConAutore[]> {
   if (nonConfigurato()) return [];
   const supabase = await creaClientServer();
 
+  // La FK va indicata esplicitamente: da quando esiste note_menzioni (ponte fra
+  // note e profili), «autore:profili» sarebbe ambiguo e PostgREST risponderebbe
+  // 300, svuotando la lista. «!note_autore_id_fkey» sceglie il legame diretto.
   const { data: righe } = await supabase
     .from("note")
-    .select("*, autore:profili(nome)")
+    .select("*, autore:profili!note_autore_id_fkey(nome)")
     .order("completata")
     .order("creata_il", { ascending: false });
   const note = righe ?? [];
