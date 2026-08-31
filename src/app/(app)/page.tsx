@@ -81,10 +81,7 @@ export default async function PaginaOggi() {
           </Scheda>
         ) : (
           <Scheda>
-            <div className="mb-4 flex items-center justify-between gap-3">
-              <TitoloScheda>Su cosa lavorare</TitoloScheda>
-              <span className="text-[13px] font-semibold text-muted">Per valore e avanzamento</span>
-            </div>
+            <TitoloScheda className="mb-4">Trattative da seguire</TitoloScheda>
 
             <ol className="flex flex-col gap-2.5">
               {perImportanza.slice(0, 5).map((t) => {
