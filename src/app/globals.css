@@ -30,21 +30,33 @@
   --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
 }
 
+:root {
+  /* altezza della tastiera a schermo: la aggiorna la VisualViewport API */
+  --kb: 0px;
+}
+
 * {
   box-sizing: border-box;
 }
 
 html {
   -webkit-text-size-adjust: 100%;
+  height: 100%;
 }
 
+/* Comportamento «app»: il documento non scorre e non rimbalza; scorre solo
+ * l'area interna dell'app. Così niente fuoriuscite di margine né bounce. */
 body {
   margin: 0;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
   /* la tinta neutra fa risaltare la colonna dell'app su desktop */
   background: #e7e6e2;
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .h1 {

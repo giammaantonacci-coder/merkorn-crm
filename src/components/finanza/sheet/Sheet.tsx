@@ -13,18 +13,24 @@ export function Sheet({ onClose, children }: { onClose: () => void; children: Re
       />
       <div
         className="sheet-su"
+        onFocusCapture={(e) => {
+          const t = e.target as HTMLElement;
+          setTimeout(() => t.scrollIntoView({ block: "center", behavior: "smooth" }), 260);
+        }}
         style={{
           position: "absolute",
           left: 0,
           right: 0,
-          bottom: 0,
+          // si solleva sopra la tastiera quando è aperta
+          bottom: "var(--kb, 0px)",
           zIndex: 50,
           background: "#f5f6f8",
           borderRadius: "28px 28px 42px 42px",
           padding: "10px 22px 30px",
           paddingBottom: "calc(30px + env(safe-area-inset-bottom, 0px))",
-          maxHeight: "92%",
+          maxHeight: "calc(100% - var(--kb, 0px) - 8px)",
           overflowY: "auto",
+          transition: "bottom .18s ease",
         }}
       >
         <div style={{ width: 38, height: 5, borderRadius: 3, background: "#d3d6dc", margin: "0 auto 14px" }} />
