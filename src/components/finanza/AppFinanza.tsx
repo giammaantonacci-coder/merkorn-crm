@@ -59,10 +59,8 @@ export function AppFinanza() {
       className="mx-auto"
       style={{
         position: "fixed",
-        top: 0,
-        bottom: 0,
-        left: "50%",
-        transform: "translateX(-50%)",
+        inset: 0,
+        margin: "0 auto",
         width: "100%",
         maxWidth: 430,
         overflow: "hidden",
@@ -78,7 +76,6 @@ export function AppFinanza() {
           overflowY: "auto",
           overflowX: "hidden",
           overscrollBehavior: "contain",
-          WebkitOverflowScrolling: "touch",
           padding: "calc(env(safe-area-inset-top, 0px) + 18px) 22px 116px",
         }}
       >

@@ -81,8 +81,10 @@ export function BarraNav({
 }) {
   return (
     <nav
-      className="absolute bottom-0 left-0 right-0 z-20 flex items-start justify-around border-t border-line"
+      className="fixed bottom-0 left-0 right-0 z-20 mx-auto flex items-start justify-around border-t border-line"
       style={{
+        width: "100%",
+        maxWidth: 430,
         height: 88,
         background: "rgba(255,255,255,.92)",
         backdropFilter: "blur(12px)",
