@@ -132,6 +132,16 @@ export function iniziale(nome: string): string {
   return (nome.trim()[0] ?? "?").toUpperCase();
 }
 
+/** Scurisce un colore esadecimale mescolandolo col nero (f = quanto, 0..1). */
+export function scurisci(hex: string, f = 0.32): string {
+  const n = parseInt(hex.replace("#", ""), 16);
+  const r = (n >> 16) & 255;
+  const g = (n >> 8) & 255;
+  const b = n & 255;
+  const d = (c: number) => Math.round(c * (1 - f));
+  return `#${((1 << 24) + (d(r) << 16) + (d(g) << 8) + d(b)).toString(16).slice(1)}`;
+}
+
 const MESI_BREVI = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
 
 /**

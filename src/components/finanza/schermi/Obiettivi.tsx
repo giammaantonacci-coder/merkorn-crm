@@ -1,4 +1,4 @@
-import { eur, type Calcolo, type Stato } from "@/lib/finanza";
+import { eur, scurisci, type Calcolo, type Stato } from "@/lib/finanza";
 
 export function Obiettivi({
   stato,
@@ -47,7 +47,7 @@ export function Obiettivi({
                 lineHeight: 1,
                 letterSpacing: "-.04em",
                 color: o.colore,
-                opacity: 0.14,
+                opacity: 0.08,
                 zIndex: 0,
                 pointerEvents: "none",
               }}
@@ -70,8 +70,8 @@ export function Obiettivi({
                 <div style={{ fontSize: 24, fontWeight: 800 }}>{eur(o.salvato, 0)}</div>
                 <div style={{ fontSize: 13, color: "#8a8f99", fontWeight: 500 }}>di {eur(o.target, 0)}</div>
               </div>
-              <div style={{ height: 8, background: "#eceef2", borderRadius: 4, marginTop: 12, overflow: "hidden", maxWidth: "72%" }}>
-                <div style={{ width: `${perc}%`, height: "100%", background: o.colore, borderRadius: 4 }} />
+              <div style={{ height: 8, background: "#dcdfe6", borderRadius: 4, marginTop: 12, overflow: "hidden", maxWidth: "72%" }}>
+                <div style={{ width: `${perc}%`, height: "100%", background: scurisci(o.colore, 0.28), borderRadius: 4 }} />
               </div>
             </div>
           </div>
