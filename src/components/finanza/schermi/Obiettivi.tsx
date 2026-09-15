@@ -34,27 +34,45 @@ export function Obiettivi({
       {stato.obiettivi.map((o) => {
         const perc = o.target > 0 ? Math.min(100, Math.round((o.salvato / o.target) * 100)) : 0;
         return (
-          <div key={o.id} className="card" style={{ marginTop: 14, padding: 18 }}>
-            <div className="flex items-center justify-between">
+          <div key={o.id} className="card" style={{ position: "relative", overflow: "hidden", marginTop: 14, padding: 18 }}>
+            {/* la percentuale, grande e sfumata, fa da sfondo */}
+            <span
+              aria-hidden
+              style={{
+                position: "absolute",
+                right: 10,
+                bottom: -14,
+                fontSize: 92,
+                fontWeight: 800,
+                lineHeight: 1,
+                letterSpacing: "-.04em",
+                color: o.colore,
+                opacity: 0.14,
+                zIndex: 0,
+                pointerEvents: "none",
+              }}
+            >
+              {perc}%
+            </span>
+
+            <button
+              type="button"
+              onClick={() => onElimina(o.id)}
+              aria-label={`Elimina ${o.nome}`}
+              style={{ position: "absolute", top: 12, right: 12, zIndex: 2, width: 22, height: 22, borderRadius: "50%", border: 0, background: "transparent", color: "#c0c4cc", fontSize: 15, cursor: "pointer", lineHeight: 1 }}
+            >
+              ✕
+            </button>
+
+            <div style={{ position: "relative", zIndex: 1 }}>
               <div style={{ fontSize: 15, fontWeight: 700 }}>{o.nome}</div>
-              <div className="flex items-center" style={{ gap: 10 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: o.colore }}>{perc}%</div>
-                <button
-                  type="button"
-                  onClick={() => onElimina(o.id)}
-                  aria-label={`Elimina ${o.nome}`}
-                  style={{ width: 22, height: 22, borderRadius: "50%", border: 0, background: "transparent", color: "#c0c4cc", fontSize: 15, cursor: "pointer", lineHeight: 1 }}
-                >
-                  ✕
-                </button>
+              <div className="flex items-baseline" style={{ gap: 8, marginTop: 8 }}>
+                <div style={{ fontSize: 24, fontWeight: 800 }}>{eur(o.salvato, 0)}</div>
+                <div style={{ fontSize: 13, color: "#8a8f99", fontWeight: 500 }}>di {eur(o.target, 0)}</div>
               </div>
-            </div>
-            <div className="flex items-baseline justify-between" style={{ marginTop: 6 }}>
-              <div style={{ fontSize: 20, fontWeight: 800 }}>{eur(o.salvato, 0)}</div>
-              <div style={{ fontSize: 13, color: "#8a8f99", fontWeight: 500 }}>di {eur(o.target, 0)}</div>
-            </div>
-            <div style={{ height: 8, background: "#eceef2", borderRadius: 4, marginTop: 10, overflow: "hidden" }}>
-              <div style={{ width: `${perc}%`, height: "100%", background: o.colore, borderRadius: 4 }} />
+              <div style={{ height: 8, background: "#eceef2", borderRadius: 4, marginTop: 12, overflow: "hidden", maxWidth: "72%" }}>
+                <div style={{ width: `${perc}%`, height: "100%", background: o.colore, borderRadius: 4 }} />
+              </div>
             </div>
           </div>
         );

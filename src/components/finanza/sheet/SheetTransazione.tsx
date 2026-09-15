@@ -3,7 +3,8 @@
 import { useState } from "react";
 
 import { Sheet, TestataSheet } from "@/components/finanza/sheet/Sheet";
-import { CAT_COLORI, CAT_USCITA, leggiImporto, type Categoria, type TipoTx } from "@/lib/finanza";
+import { IconaCategoria } from "@/components/finanza/IconaCategoria";
+import { CAT_USCITA, leggiImporto, type Categoria, type TipoTx } from "@/lib/finanza";
 
 export function SheetTransazione({
   onClose,
@@ -135,7 +136,7 @@ export function SheetTransazione({
                     color: sel ? "#4b52c9" : "#5c616b",
                   }}
                 >
-                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: CAT_COLORI[c] }} />
+                  <IconaCategoria cat={c} size={16} />
                   {c}
                 </button>
               );

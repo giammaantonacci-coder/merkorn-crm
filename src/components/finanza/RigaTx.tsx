@@ -1,4 +1,5 @@
-import { CAT_COLORI, eur, type Transazione } from "@/lib/finanza";
+import { IconaCategoria } from "@/components/finanza/IconaCategoria";
+import { eur, type Transazione } from "@/lib/finanza";
 
 /** Una riga della lista movimenti: pallino categoria, nome, quando · categoria, importo. */
 export function RigaTx({
@@ -22,14 +23,7 @@ export function RigaTx({
         className="flex items-center justify-center"
         style={{ width: size, height: size, borderRadius: 9, background: "#eceef2" }}
       >
-        <span
-          style={{
-            width: size >= 34 ? 10 : 9,
-            height: size >= 34 ? 10 : 9,
-            borderRadius: "50%",
-            background: CAT_COLORI[tx.cat],
-          }}
-        />
+        <IconaCategoria cat={tx.cat} size={size >= 34 ? 18 : 17} />
       </div>
       <div className="min-w-0 flex-1">
         <div className="truncate" style={{ fontSize: 14, fontWeight: 600 }}>
