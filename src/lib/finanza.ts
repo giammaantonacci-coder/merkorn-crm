@@ -33,6 +33,7 @@ export type Conto = {
 
 export type Stato = {
   nome: string;
+  budget: number; // budget mensile impostato dall'utente (0 = non impostato)
   tx: Transazione[];
   obiettivi: Obiettivo[];
   conti: Conto[];
@@ -201,6 +202,7 @@ export function nuovoConto(dati: { nome: string; sotto: string; saldo: number })
 /** Si parte da zero: nessun dato d'esempio. */
 export const STATO_INIZIALE: Stato = {
   nome: "",
+  budget: 0,
   tx: [],
   obiettivi: [],
   conti: [],
@@ -213,10 +215,10 @@ export type Calcolo = {
   uscite: number;
   saldo: number;
   patrimonio: number;
+  budget: number;
   budgetSpeso: number;
   budgetPerc: number;
   budgetRimasto: number;
-  perCategoria: { cat: Categoria; speso: number; perc: number; colore: string }[];
   risparmioTotale: number;
 };
 
@@ -226,27 +228,11 @@ export function calcola(stato: Stato): Calcolo {
   const saldo = SALDO_BASE + entrate - uscite;
   const patrimonio = saldo + stato.conti.reduce((a, c) => a + c.saldo, 0);
 
-  const perCategoria = BUDGET_CATEGORIE.map((cat, i) => {
-    const speso = stato.tx
-      .filter((t) => t.tipo === "out" && t.cat === cat)
-      .reduce((a, t) => a + t.importo, 0);
-    return { cat, speso, perc: (speso / BUDGET_TOTALE) * 100, colore: SFUMATURE_BUDGET[i] };
-  });
-
+  const budget = stato.budget || 0;
   const budgetSpeso = uscite;
-  const budgetPerc = Math.min(100, Math.round((budgetSpeso / BUDGET_TOTALE) * 100));
-  const budgetRimasto = Math.max(0, BUDGET_TOTALE - budgetSpeso);
+  const budgetPerc = budget > 0 ? Math.min(100, Math.round((budgetSpeso / budget) * 100)) : 0;
+  const budgetRimasto = budget > 0 ? Math.max(0, budget - budgetSpeso) : 0;
   const risparmioTotale = stato.obiettivi.reduce((a, o) => a + o.salvato, 0);
 
-  return {
-    entrate,
-    uscite,
-    saldo,
-    patrimonio,
-    budgetSpeso,
-    budgetPerc,
-    budgetRimasto,
-    perCategoria,
-    risparmioTotale,
-  };
+  return { entrate, uscite, saldo, patrimonio, budget, budgetSpeso, budgetPerc, budgetRimasto, risparmioTotale };
 }

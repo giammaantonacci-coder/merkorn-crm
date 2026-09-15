@@ -34,6 +34,7 @@ export function useFinanza() {
         const salvato = JSON.parse(grezzo) as Partial<Stato>;
         setStato({
           nome: salvato.nome ?? STATO_INIZIALE.nome,
+          budget: salvato.budget ?? STATO_INIZIALE.budget,
           tx: salvato.tx ?? STATO_INIZIALE.tx,
           obiettivi: salvato.obiettivi ?? STATO_INIZIALE.obiettivi,
           conti: salvato.conti ?? STATO_INIZIALE.conti,
@@ -58,6 +59,10 @@ export function useFinanza() {
   const impostaNome = useCallback((nome: string) => {
     const pulito = nome.trim() || "Io";
     setStato((s) => ({ ...s, nome: pulito }));
+  }, []);
+
+  const impostaBudget = useCallback((budget: number) => {
+    setStato((s) => ({ ...s, budget: Math.max(0, budget) }));
   }, []);
 
   const aggiungiTx = useCallback(
@@ -97,6 +102,7 @@ export function useFinanza() {
     stato,
     pronto,
     impostaNome,
+    impostaBudget,
     aggiungiTx,
     eliminaTx,
     aggiungiObiettivo,

@@ -11,15 +11,17 @@ import { SheetTransazione } from "@/components/finanza/sheet/SheetTransazione";
 import { SheetObiettivo } from "@/components/finanza/sheet/SheetObiettivo";
 import { SheetConto } from "@/components/finanza/sheet/SheetConto";
 import { SheetProfilo } from "@/components/finanza/sheet/SheetProfilo";
+import { SheetBudget } from "@/components/finanza/sheet/SheetBudget";
 import { useFinanza } from "@/lib/useFinanza";
 import { calcola, OBIETTIVO_COLORI } from "@/lib/finanza";
 
-type Modale = "nessuna" | "tx" | "obiettivo" | "conto" | "profilo";
+type Modale = "nessuna" | "tx" | "obiettivo" | "conto" | "profilo" | "budget";
 
 export function AppFinanza() {
   const {
     stato,
     impostaNome,
+    impostaBudget,
     aggiungiTx,
     eliminaTx,
     aggiungiObiettivo,
@@ -86,6 +88,7 @@ export function AppFinanza() {
             calcolo={calcolo}
             onVediSpese={() => setTab("spese")}
             onProfilo={() => setModale("profilo")}
+            onBudget={() => setModale("budget")}
           />
         )}
         {tab === "spese" && <Spese stato={stato} onElimina={eliminaTx} />}
@@ -144,6 +147,17 @@ export function AppFinanza() {
           onClose={chiudi}
           onSalva={(nome) => {
             impostaNome(nome);
+            chiudi();
+          }}
+        />
+      )}
+
+      {modale === "budget" && (
+        <SheetBudget
+          budget={stato.budget}
+          onClose={chiudi}
+          onSalva={(budget) => {
+            impostaBudget(budget);
             chiudi();
           }}
         />

@@ -1,17 +1,21 @@
 import { RigaTx } from "@/components/finanza/RigaTx";
-import { andamentoSaldo, eur, iniziale, type Calcolo, type Stato } from "@/lib/finanza";
+import { andamentoSaldo, eur, iniziale, scurisci, type Calcolo, type Stato } from "@/lib/finanza";
 
 export function Home({
   stato,
   calcolo,
   onVediSpese,
   onProfilo,
+  onBudget,
 }: {
   stato: Stato;
   calcolo: Calcolo;
   onVediSpese: () => void;
   onProfilo: () => void;
+  onBudget: () => void;
 }) {
+  const budgetColore =
+    calcolo.budgetPerc >= 100 ? "#d1543f" : calcolo.budgetPerc >= 80 ? "#c9853f" : "#6b72f0";
   const recenti = stato.tx.slice(0, 3);
   const and = andamentoSaldo(stato.tx);
 
@@ -100,28 +104,56 @@ export function Home({
         </div>
       </div>
 
-      {/* budget */}
-      <div className="card" style={{ marginTop: 14, padding: 15 }}>
-        <div className="flex items-center justify-between" style={{ marginBottom: 12 }}>
-          <span style={{ fontSize: 14, fontWeight: 700 }}>Budget mensile</span>
-          <span style={{ fontSize: 12, color: "#8a8f99", fontWeight: 500 }}>
-            {calcolo.budgetPerc}% · {eur(calcolo.budgetRimasto, 0)} rimasti
-          </span>
-        </div>
-        <div className="flex" style={{ height: 6, background: "#eceef2", borderRadius: 3, overflow: "hidden" }}>
-          {calcolo.perCategoria.map((c) => (
-            <div key={c.cat} style={{ width: `${c.perc}%`, height: "100%", background: c.colore }} />
-          ))}
-        </div>
-        <div className="flex justify-between" style={{ marginTop: 12, fontSize: 12 }}>
-          {calcolo.perCategoria.map((c) => (
-            <span key={c.cat} style={{ color: "#5c616b" }}>
-              <b style={{ color: "#111318" }}>{c.cat === "Trasporti" ? "Trasp." : c.cat}</b>{" "}
-              {Math.round(c.speso)}
+      {/* budget — stile obiettivi con la percentuale in filigrana */}
+      <button
+        type="button"
+        onClick={onBudget}
+        className="card"
+        style={{ position: "relative", overflow: "hidden", marginTop: 14, padding: 18, width: "100%", textAlign: "left", cursor: "pointer", fontFamily: "inherit", display: "block" }}
+      >
+        {calcolo.budget > 0 ? (
+          <>
+            <span
+              aria-hidden
+              style={{
+                position: "absolute",
+                right: 10,
+                bottom: -14,
+                fontSize: 92,
+                fontWeight: 800,
+                lineHeight: 1,
+                letterSpacing: "-.04em",
+                color: budgetColore,
+                opacity: 0.08,
+                zIndex: 0,
+                pointerEvents: "none",
+              }}
+            >
+              {calcolo.budgetPerc}%
             </span>
-          ))}
-        </div>
-      </div>
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <div style={{ fontSize: 15, fontWeight: 700 }}>Budget mensile</div>
+              <div className="flex items-baseline" style={{ gap: 8, marginTop: 8 }}>
+                <div style={{ fontSize: 24, fontWeight: 800 }}>{eur(calcolo.budgetSpeso, 0)}</div>
+                <div style={{ fontSize: 13, color: "#8a8f99", fontWeight: 500 }}>di {eur(calcolo.budget, 0)}</div>
+              </div>
+              <div style={{ height: 8, background: "#dcdfe6", borderRadius: 4, marginTop: 12, overflow: "hidden", maxWidth: "72%" }}>
+                <div style={{ width: `${calcolo.budgetPerc}%`, height: "100%", background: scurisci(budgetColore, 0.28), borderRadius: 4 }} />
+              </div>
+              <div style={{ marginTop: 8, fontSize: 12.5, color: "#8a8f99", fontWeight: 500 }}>
+                {eur(calcolo.budgetRimasto, 0)} rimasti questo mese
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div style={{ fontSize: 15, fontWeight: 700 }}>Budget mensile</div>
+            <div style={{ marginTop: 6, fontSize: 13, color: "#8a8f99", fontWeight: 500 }}>
+              Tocca per impostare un tetto di spesa mensile.
+            </div>
+          </>
+        )}
+      </button>
 
       {/* recenti */}
       <div className="flex items-baseline justify-between" style={{ marginTop: 20 }}>
