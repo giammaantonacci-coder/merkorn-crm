@@ -20,10 +20,12 @@ export function Conti({
   stato,
   calcolo,
   onNuovo,
+  onElimina,
 }: {
   stato: Stato;
   calcolo: Calcolo;
   onNuovo: () => void;
+  onElimina: (id: string) => void;
 }) {
   return (
     <>
@@ -79,6 +81,14 @@ export function Conti({
               </div>
             </div>
             <div style={{ fontSize: 15, fontWeight: 700 }}>{eur(c.saldo)}</div>
+            <button
+              type="button"
+              onClick={() => onElimina(c.id)}
+              aria-label={`Elimina ${c.nome}`}
+              style={{ width: 26, height: 26, marginLeft: 2, borderRadius: "50%", border: 0, background: "transparent", color: "#c0c4cc", fontSize: 16, cursor: "pointer", flex: "none" }}
+            >
+              ✕
+            </button>
           </div>
         ))}
       </div>

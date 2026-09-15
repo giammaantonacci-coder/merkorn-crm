@@ -1,5 +1,5 @@
 import { RigaTx } from "@/components/finanza/RigaTx";
-import { eur, type Calcolo, type Stato } from "@/lib/finanza";
+import { eur, iniziale, type Calcolo, type Stato } from "@/lib/finanza";
 
 const BARRE = [40, 55, 48, 70, 62, 80, 100];
 const MESI = ["Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set"];
@@ -8,10 +8,12 @@ export function Home({
   stato,
   calcolo,
   onVediSpese,
+  onProfilo,
 }: {
   stato: Stato;
   calcolo: Calcolo;
   onVediSpese: () => void;
+  onProfilo: () => void;
 }) {
   const recenti = stato.tx.slice(0, 3);
 
@@ -20,14 +22,17 @@ export function Home({
       <div className="flex items-center justify-between" style={{ marginTop: 6 }}>
         <div>
           <div style={{ fontSize: 13, color: "#8a8f99", fontWeight: 500 }}>Buongiorno,</div>
-          <div className="h1">Marco</div>
+          <div className="h1">{stato.nome}</div>
         </div>
-        <div
+        <button
+          type="button"
+          onClick={onProfilo}
+          aria-label="Modifica profilo"
           className="flex items-center justify-center text-white"
-          style={{ width: 38, height: 38, borderRadius: 11, background: "#111318", fontWeight: 700, fontSize: 14 }}
+          style={{ width: 38, height: 38, borderRadius: 11, background: "#111318", fontWeight: 700, fontSize: 14, border: 0, cursor: "pointer", fontFamily: "inherit" }}
         >
-          M
-        </div>
+          {iniziale(stato.nome)}
+        </button>
       </div>
 
       {/* saldo */}

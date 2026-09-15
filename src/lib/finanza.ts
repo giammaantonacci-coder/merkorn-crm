@@ -12,6 +12,7 @@ export type Transazione = {
   tipo: TipoTx;
   importo: number;
   quando: string;
+  mese: string; // "YYYY-MM", per il filtro del mese
   ts: number;
 };
 
@@ -31,6 +32,7 @@ export type Conto = {
 };
 
 export type Stato = {
+  nome: string;
   tx: Transazione[];
   obiettivi: Obiettivo[];
   conti: Conto[];
@@ -85,6 +87,51 @@ export function quandoDa(ts: number): string {
   return `Oggi · ${ora}`;
 }
 
+/** Mese in forma "YYYY-MM". */
+export function meseDa(ts: number = Date.now()): string {
+  const d = new Date(ts);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+}
+
+const MESI_IT = [
+  "Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
+  "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre",
+];
+
+/** "2026-09" → "Settembre 2026" (o senza anno). */
+export function etichettaMese(mese: string, conAnno = true): string {
+  const [y, m] = mese.split("-").map(Number);
+  const nome = MESI_IT[(m || 1) - 1] ?? mese;
+  return conAnno ? `${nome} ${y}` : nome;
+}
+
+/** Il mese di una transazione, con ripiego per dati vecchi senza campo mese. */
+export function meseDiTx(t: Transazione): string {
+  if (t.mese) return t.mese;
+  if (t.ts > 1e12) return meseDa(t.ts);
+  return meseDa();
+}
+
+/** I mesi presenti tra le transazioni, dal più recente, col mese corrente incluso. */
+export function mesiDisponibili(tx: Transazione[]): string[] {
+  const set = new Set(tx.map(meseDiTx));
+  set.add(meseDa());
+  return [...set].sort().reverse();
+}
+
+/** Entrate e uscite di un singolo mese. */
+export function totaliMese(tx: Transazione[], mese: string) {
+  const nel = tx.filter((t) => meseDiTx(t) === mese);
+  const entrate = nel.filter((t) => t.tipo === "in").reduce((a, t) => a + t.importo, 0);
+  const uscite = nel.filter((t) => t.tipo === "out").reduce((a, t) => a + t.importo, 0);
+  return { entrate, uscite };
+}
+
+/** Iniziale per l'avatar. */
+export function iniziale(nome: string): string {
+  return (nome.trim()[0] ?? "?").toUpperCase();
+}
+
 export function nuovaTransazione(dati: {
   nome: string;
   cat: Categoria;
@@ -92,7 +139,7 @@ export function nuovaTransazione(dati: {
   importo: number;
 }): Transazione {
   const ts = Date.now();
-  return { id: id(), ...dati, quando: quandoDa(ts), ts };
+  return { id: id(), ...dati, quando: quandoDa(ts), mese: meseDa(ts), ts };
 }
 
 export function nuovoObiettivo(dati: {
@@ -110,15 +157,18 @@ export function nuovoConto(dati: { nome: string; sotto: string; saldo: number })
 
 // ------------------------------------------------------------------ dati iniziali
 
+const MESE_SEED = meseDa();
+
 export const STATO_INIZIALE: Stato = {
+  nome: "Marco",
   tx: (
     [
-      { nome: "Esselunga", cat: "Cibo", tipo: "out", importo: 48.2, quando: "Oggi · 14:20", ts: 6 },
-      { nome: "Stipendio", cat: "Entrata", tipo: "in", importo: 3200, quando: "1 set", ts: 5 },
-      { nome: "Netflix", cat: "Svago", tipo: "out", importo: 12.99, quando: "2 set", ts: 4 },
-      { nome: "ATM Metro", cat: "Trasporti", tipo: "out", importo: 2.0, quando: "Oggi · 08:05", ts: 3 },
-      { nome: "Enel Energia", cat: "Casa", tipo: "out", importo: 74.5, quando: "Ieri", ts: 2 },
-      { nome: "Bar Centrale", cat: "Cibo", tipo: "out", importo: 3.8, quando: "Ieri", ts: 1 },
+      { nome: "Esselunga", cat: "Cibo", tipo: "out", importo: 48.2, quando: "Oggi · 14:20", mese: MESE_SEED, ts: 6 },
+      { nome: "Stipendio", cat: "Entrata", tipo: "in", importo: 3200, quando: "1 set", mese: MESE_SEED, ts: 5 },
+      { nome: "Netflix", cat: "Svago", tipo: "out", importo: 12.99, quando: "2 set", mese: MESE_SEED, ts: 4 },
+      { nome: "ATM Metro", cat: "Trasporti", tipo: "out", importo: 2.0, quando: "Oggi · 08:05", mese: MESE_SEED, ts: 3 },
+      { nome: "Enel Energia", cat: "Casa", tipo: "out", importo: 74.5, quando: "Ieri", mese: MESE_SEED, ts: 2 },
+      { nome: "Bar Centrale", cat: "Cibo", tipo: "out", importo: 3.8, quando: "Ieri", mese: MESE_SEED, ts: 1 },
     ] satisfies Omit<Transazione, "id">[]
   ).map((t) => ({ ...t, id: `seed-${t.nome}` })),
   obiettivi: [

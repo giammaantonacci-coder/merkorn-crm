@@ -5,10 +5,12 @@ export function RigaTx({
   tx,
   size = 34,
   ultima = false,
+  onElimina,
 }: {
   tx: Transazione;
   size?: number;
   ultima?: boolean;
+  onElimina?: () => void;
 }) {
   const entrata = tx.tipo === "in";
   return (
@@ -41,6 +43,17 @@ export function RigaTx({
         {entrata ? "+ " : "− "}
         {eur(tx.importo)}
       </div>
+      {onElimina ? (
+        <button
+          type="button"
+          onClick={onElimina}
+          aria-label={`Elimina ${tx.nome}`}
+          className="flex items-center justify-center"
+          style={{ width: 26, height: 26, marginLeft: 2, borderRadius: "50%", border: 0, background: "transparent", color: "#c0c4cc", fontSize: 16, cursor: "pointer", flex: "none" }}
+        >
+          ✕
+        </button>
+      ) : null}
     </div>
   );
 }

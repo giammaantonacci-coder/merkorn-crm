@@ -33,6 +33,7 @@ export function useFinanza() {
       if (grezzo) {
         const salvato = JSON.parse(grezzo) as Partial<Stato>;
         setStato({
+          nome: salvato.nome ?? STATO_INIZIALE.nome,
           tx: salvato.tx ?? STATO_INIZIALE.tx,
           obiettivi: salvato.obiettivi ?? STATO_INIZIALE.obiettivi,
           conti: salvato.conti ?? STATO_INIZIALE.conti,
@@ -53,6 +54,11 @@ export function useFinanza() {
       // salvataggio non disponibile: l'app resta comunque usabile in sessione
     }
   }, [stato]);
+
+  const impostaNome = useCallback((nome: string) => {
+    const pulito = nome.trim() || "Io";
+    setStato((s) => ({ ...s, nome: pulito }));
+  }, []);
 
   const aggiungiTx = useCallback(
     (dati: { nome: string; cat: Categoria; tipo: TipoTx; importo: number }) => {
@@ -90,6 +96,7 @@ export function useFinanza() {
   return {
     stato,
     pronto,
+    impostaNome,
     aggiungiTx,
     eliminaTx,
     aggiungiObiettivo,

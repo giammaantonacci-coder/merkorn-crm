@@ -10,13 +10,23 @@ import { Conti } from "@/components/finanza/schermi/Conti";
 import { SheetTransazione } from "@/components/finanza/sheet/SheetTransazione";
 import { SheetObiettivo } from "@/components/finanza/sheet/SheetObiettivo";
 import { SheetConto } from "@/components/finanza/sheet/SheetConto";
+import { SheetProfilo } from "@/components/finanza/sheet/SheetProfilo";
 import { useFinanza } from "@/lib/useFinanza";
 import { calcola, OBIETTIVO_COLORI } from "@/lib/finanza";
 
-type Modale = "nessuna" | "tx" | "obiettivo" | "conto";
+type Modale = "nessuna" | "tx" | "obiettivo" | "conto" | "profilo";
 
 export function AppFinanza() {
-  const { stato, aggiungiTx, aggiungiObiettivo, aggiungiConto } = useFinanza();
+  const {
+    stato,
+    impostaNome,
+    aggiungiTx,
+    eliminaTx,
+    aggiungiObiettivo,
+    eliminaObiettivo,
+    aggiungiConto,
+    eliminaConto,
+  } = useFinanza();
   const [tab, setTab] = useState<Tab>("home");
   const [modale, setModale] = useState<Modale>("nessuna");
 
@@ -44,12 +54,26 @@ export function AppFinanza() {
           padding: "calc(env(safe-area-inset-top, 0px) + 18px) 22px 116px",
         }}
       >
-        {tab === "home" && <Home stato={stato} calcolo={calcolo} onVediSpese={() => setTab("spese")} />}
-        {tab === "spese" && <Spese stato={stato} calcolo={calcolo} />}
-        {tab === "obiettivi" && (
-          <Obiettivi stato={stato} calcolo={calcolo} onNuovo={() => setModale("obiettivo")} />
+        {tab === "home" && (
+          <Home
+            stato={stato}
+            calcolo={calcolo}
+            onVediSpese={() => setTab("spese")}
+            onProfilo={() => setModale("profilo")}
+          />
         )}
-        {tab === "conti" && <Conti stato={stato} calcolo={calcolo} onNuovo={() => setModale("conto")} />}
+        {tab === "spese" && <Spese stato={stato} onElimina={eliminaTx} />}
+        {tab === "obiettivi" && (
+          <Obiettivi
+            stato={stato}
+            calcolo={calcolo}
+            onNuovo={() => setModale("obiettivo")}
+            onElimina={eliminaObiettivo}
+          />
+        )}
+        {tab === "conti" && (
+          <Conti stato={stato} calcolo={calcolo} onNuovo={() => setModale("conto")} onElimina={eliminaConto} />
+        )}
       </div>
 
       <BarraNav tab={tab} onTab={setTab} onAggiungi={() => setModale("tx")} />
@@ -83,6 +107,17 @@ export function AppFinanza() {
           onClose={chiudi}
           onSalva={(dati) => {
             aggiungiConto(dati);
+            chiudi();
+          }}
+        />
+      )}
+
+      {modale === "profilo" && (
+        <SheetProfilo
+          nome={stato.nome}
+          onClose={chiudi}
+          onSalva={(nome) => {
+            impostaNome(nome);
             chiudi();
           }}
         />
