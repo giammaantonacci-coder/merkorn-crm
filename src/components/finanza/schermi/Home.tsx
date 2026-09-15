@@ -1,5 +1,5 @@
 import { RigaTx } from "@/components/finanza/RigaTx";
-import { andamentoSaldo, eur, iniziale, scurisci, type Calcolo, type Stato } from "@/lib/finanza";
+import { andamentoSaldo, eur, iniziale, scurisci, spesaPerMese, type Calcolo, type Stato } from "@/lib/finanza";
 
 export function Home({
   stato,
@@ -18,6 +18,14 @@ export function Home({
     calcolo.budgetPerc >= 100 ? "#d1543f" : calcolo.budgetPerc >= 80 ? "#c9853f" : "#6b72f0";
   const recenti = stato.tx.slice(0, 3);
   const and = andamentoSaldo(stato.tx);
+
+  // confronto spese fra i mesi
+  const mesi = spesaPerMese(stato.tx, 6);
+  const totaleSpese = mesi.reduce((a, m) => a + m.uscite, 0);
+  const scala = Math.max(...mesi.map((m) => m.uscite), calcolo.budget, 1) * 1.15;
+  const spesaCorrente = mesi[mesi.length - 1].uscite;
+  const spesaPrec = mesi.length > 1 ? mesi[mesi.length - 2].uscite : 0;
+  const diff = spesaCorrente - spesaPrec;
 
   return (
     <>
@@ -154,6 +162,56 @@ export function Home({
           </>
         )}
       </button>
+
+      {/* confronto spese fra i mesi */}
+      {totaleSpese > 0 ? (
+        <div className="card" style={{ marginTop: 14, padding: 18 }}>
+          <div className="flex items-baseline justify-between">
+            <div style={{ fontSize: 15, fontWeight: 700 }}>Spese per mese</div>
+            {spesaPrec > 0 || spesaCorrente > 0 ? (
+              <div style={{ fontSize: 12.5, fontWeight: 600, color: diff > 0 ? "#d1543f" : diff < 0 ? "#1f9d6b" : "#8a8f99" }}>
+                {diff === 0
+                  ? "come il mese scorso"
+                  : `${diff > 0 ? "+" : "−"} ${eur(diff, 0)} sul mese scorso`}
+              </div>
+            ) : null}
+          </div>
+
+          <div style={{ position: "relative", height: 76, marginTop: 16, display: "flex", alignItems: "flex-end", gap: 10 }}>
+            {calcolo.budget > 0 ? (
+              <div
+                aria-hidden
+                style={{ position: "absolute", left: 0, right: 0, top: `${Math.max(0, (1 - calcolo.budget / scala) * 100)}%`, borderTop: "1.5px dashed #b7bcc6" }}
+              >
+                <span style={{ position: "absolute", right: 0, top: -8, fontSize: 10, fontWeight: 700, color: "#8a8f99", background: "#fff", padding: "0 4px" }}>
+                  budget
+                </span>
+              </div>
+            ) : null}
+            {mesi.map((m, i) => {
+              const h = (m.uscite / scala) * 100;
+              const corrente = i === mesi.length - 1;
+              const sfora = calcolo.budget > 0 && m.uscite > calcolo.budget;
+              const colore = sfora ? "#d1543f" : corrente ? "#6b72f0" : "#d3d7e0";
+              return (
+                <div key={m.mese} className="flex items-end" style={{ flex: 1, height: "100%" }}>
+                  <div style={{ width: "100%", height: `${Math.max(m.uscite > 0 ? 4 : 0, h)}%`, background: colore, borderRadius: "4px 4px 0 0" }} />
+                </div>
+              );
+            })}
+          </div>
+          <div className="flex" style={{ gap: 10, marginTop: 8 }}>
+            {mesi.map((m, i) => (
+              <span
+                key={m.mese}
+                style={{ flex: 1, textAlign: "center", fontSize: 11, fontWeight: i === mesi.length - 1 ? 800 : 600, color: i === mesi.length - 1 ? "#111318" : "#8a8f99" }}
+              >
+                {m.etichetta}
+              </span>
+            ))}
+          </div>
+        </div>
+      ) : null}
 
       {/* recenti */}
       <div className="flex items-baseline justify-between" style={{ marginTop: 20 }}>

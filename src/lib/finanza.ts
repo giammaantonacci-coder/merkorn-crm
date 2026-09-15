@@ -63,13 +63,11 @@ export const OBIETTIVO_COLORI = ["#6b72f0", "#1f9d6b", "#c9a86a", "#d1543f", "#4
 
 /** € con due decimali (default) o senza, all'italiana. */
 export function eur(n: number, decimali = 2): string {
-  return (
-    "€ " +
-    Math.abs(n).toLocaleString("it-IT", {
-      minimumFractionDigits: decimali,
-      maximumFractionDigits: decimali,
-    })
-  );
+  const assoluto = Math.abs(n).toLocaleString("it-IT", {
+    minimumFractionDigits: decimali,
+    maximumFractionDigits: decimali,
+  });
+  return `${n < 0 ? "−" : ""}€ ${assoluto}`;
 }
 
 /** Interpreta un importo digitato all'italiana: "1.240,50" → 1240.5 */
@@ -223,10 +221,16 @@ export type Calcolo = {
 };
 
 export function calcola(stato: Stato): Calcolo {
-  const entrate = stato.tx.filter((t) => t.tipo === "in").reduce((a, t) => a + t.importo, 0);
-  const uscite = stato.tx.filter((t) => t.tipo === "out").reduce((a, t) => a + t.importo, 0);
-  const saldo = SALDO_BASE + entrate - uscite;
+  // Il saldo è cumulativo su tutto; entrate/uscite e budget sono del mese corrente.
+  const entrateTot = stato.tx.filter((t) => t.tipo === "in").reduce((a, t) => a + t.importo, 0);
+  const usciteTot = stato.tx.filter((t) => t.tipo === "out").reduce((a, t) => a + t.importo, 0);
+  const saldo = SALDO_BASE + entrateTot - usciteTot;
   const patrimonio = saldo + stato.conti.reduce((a, c) => a + c.saldo, 0);
+
+  const mese = meseDa();
+  const delMese = stato.tx.filter((t) => meseDiTx(t) === mese);
+  const entrate = delMese.filter((t) => t.tipo === "in").reduce((a, t) => a + t.importo, 0);
+  const uscite = delMese.filter((t) => t.tipo === "out").reduce((a, t) => a + t.importo, 0);
 
   const budget = stato.budget || 0;
   const budgetSpeso = uscite;
@@ -235,4 +239,19 @@ export function calcola(stato: Stato): Calcolo {
   const risparmioTotale = stato.obiettivi.reduce((a, o) => a + o.salvato, 0);
 
   return { entrate, uscite, saldo, patrimonio, budget, budgetSpeso, budgetPerc, budgetRimasto, risparmioTotale };
+}
+
+/** Uscite totali per ciascuno degli ultimi n mesi (dal più vecchio al corrente). */
+export function spesaPerMese(tx: Transazione[], n = 6): { mese: string; etichetta: string; uscite: number }[] {
+  const oggi = new Date();
+  const out: { mese: string; etichetta: string; uscite: number }[] = [];
+  for (let i = n - 1; i >= 0; i--) {
+    const d = new Date(oggi.getFullYear(), oggi.getMonth() - i, 1);
+    const mese = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const uscite = tx
+      .filter((t) => t.tipo === "out" && meseDiTx(t) === mese)
+      .reduce((a, t) => a + t.importo, 0);
+    out.push({ mese, etichetta: MESI_BREVI[d.getMonth()], uscite });
+  }
+  return out;
 }
