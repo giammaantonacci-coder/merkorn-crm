@@ -3,13 +3,13 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Merkorn CRM",
-  description: "Dal primo contatto all'assistenza, con il tempo di ogni fase.",
+  title: "Finanza",
+  description: "La tua finanza personale: saldo, spese, obiettivi e conti, in un colpo d'occhio.",
   manifest: "/manifest.webmanifest",
-  applicationName: "Merkorn",
+  applicationName: "Finanza",
   appleWebApp: {
     capable: true,
-    title: "Merkorn",
+    title: "Finanza",
     statusBarStyle: "default",
   },
   icons: {
@@ -25,7 +25,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#ffffff",
+  viewportFit: "cover",
+  themeColor: "#f5f6f8",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -36,7 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap"
         />
       </head>
       <body>{children}</body>

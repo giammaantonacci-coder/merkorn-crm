@@ -1,22 +1,21 @@
 import type { MetadataRoute } from "next";
 
 /**
- * Con questo file «Aggiungi alla schermata Home» salva l'app con la sua icona
- * e la apre a schermo intero, come un'applicazione. Lo splash all'avvio è
- * arancione col marchio; la barra di stato resta bianca, come l'app in uso.
+ * «Aggiungi alla schermata Home» salva l'app con la sua icona e la apre a
+ * schermo intero. Splash indaco col marchio, barra di stato chiara come l'app.
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Merkorn CRM",
-    short_name: "Merkorn",
-    description: "Dal primo contatto all'assistenza, con il tempo di ogni fase.",
+    name: "Finanza",
+    short_name: "Finanza",
+    description: "Saldo, spese, obiettivi e conti in un colpo d'occhio.",
     lang: "it",
     start_url: "/",
     scope: "/",
     display: "standalone",
     orientation: "portrait",
-    background_color: "#F97316",
-    theme_color: "#ffffff",
+    background_color: "#6b72f0",
+    theme_color: "#f5f6f8",
     icons: [
       { src: "/icone/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
       { src: "/icone/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
