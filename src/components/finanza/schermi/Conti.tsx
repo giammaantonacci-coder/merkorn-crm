@@ -64,6 +64,7 @@ export function Conti({
       </div>
 
       {/* altri conti */}
+      {stato.conti.length > 0 ? (
       <div className="card" style={{ marginTop: 14, padding: "6px 16px" }}>
         {stato.conti.map((c, i) => (
           <div
@@ -92,6 +93,7 @@ export function Conti({
           </div>
         ))}
       </div>
+      ) : null}
 
       <button
         type="button"

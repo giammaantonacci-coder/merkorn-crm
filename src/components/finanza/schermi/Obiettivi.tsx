@@ -26,7 +26,9 @@ export function Obiettivi({
         </button>
       </div>
       <div style={{ fontSize: 13, color: "#8a8f99", fontWeight: 500, marginTop: 4 }}>
-        Stai risparmiando {eur(calcolo.risparmioTotale, 0)} in totale
+        {stato.obiettivi.length === 0
+          ? "Crea un obiettivo per iniziare a risparmiare."
+          : `Stai risparmiando ${eur(calcolo.risparmioTotale, 0)} in totale`}
       </div>
 
       {stato.obiettivi.map((o) => {

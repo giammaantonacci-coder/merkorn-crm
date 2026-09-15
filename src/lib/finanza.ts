@@ -50,8 +50,8 @@ export const CAT_COLORI: Record<Categoria, string> = {
 
 export const CAT_USCITA: Categoria[] = ["Casa", "Cibo", "Trasporti", "Svago", "Altro"];
 
-/** Saldo di partenza del conto principale, prima di entrate e uscite registrate. */
-export const SALDO_BASE = 1761.99;
+/** Saldo di partenza del conto principale: si parte da zero. */
+export const SALDO_BASE = 0;
 
 /** Budget mensile complessivo e ripartizione mostrata nella barra. */
 export const BUDGET_TOTALE = 2400;
@@ -132,6 +132,37 @@ export function iniziale(nome: string): string {
   return (nome.trim()[0] ?? "?").toUpperCase();
 }
 
+const MESI_BREVI = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
+
+/**
+ * Andamento del saldo negli ultimi 7 mesi, ricavato dai movimenti (niente
+ * grafico finto): barre in altezza relativa, etichette dei mesi, e il flusso
+ * netto del mese corrente per il badge.
+ */
+export function andamentoSaldo(tx: Transazione[]): {
+  barre: number[];
+  etichette: string[];
+  haDati: boolean;
+  nettoMese: number;
+} {
+  const oggi = new Date();
+  const mesi: string[] = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(oggi.getFullYear(), oggi.getMonth() - i, 1);
+    mesi.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
+  }
+  const nettoDi = (t: Transazione) => (t.tipo === "in" ? t.importo : -t.importo);
+  const cumul = mesi.map((m) => tx.filter((t) => meseDiTx(t) <= m).reduce((a, t) => a + nettoDi(t), 0));
+  const min = Math.min(...cumul, 0);
+  const max = Math.max(...cumul, 0);
+  const span = max - min || 1;
+  const barre = cumul.map((v) => 15 + ((v - min) / span) * 85);
+  const etichette = mesi.map((m) => MESI_BREVI[Number(m.split("-")[1]) - 1]);
+  const meseCur = mesi[mesi.length - 1];
+  const nettoMese = tx.filter((t) => meseDiTx(t) === meseCur).reduce((a, t) => a + nettoDi(t), 0);
+  return { barre, etichette, haDati: tx.length > 0, nettoMese };
+}
+
 export function nuovaTransazione(dati: {
   nome: string;
   cat: Categoria;
@@ -157,30 +188,12 @@ export function nuovoConto(dati: { nome: string; sotto: string; saldo: number })
 
 // ------------------------------------------------------------------ dati iniziali
 
-const MESE_SEED = meseDa();
-
+/** Si parte da zero: nessun dato d'esempio. */
 export const STATO_INIZIALE: Stato = {
-  nome: "Marco",
-  tx: (
-    [
-      { nome: "Esselunga", cat: "Cibo", tipo: "out", importo: 48.2, quando: "Oggi · 14:20", mese: MESE_SEED, ts: 6 },
-      { nome: "Stipendio", cat: "Entrata", tipo: "in", importo: 3200, quando: "1 set", mese: MESE_SEED, ts: 5 },
-      { nome: "Netflix", cat: "Svago", tipo: "out", importo: 12.99, quando: "2 set", mese: MESE_SEED, ts: 4 },
-      { nome: "ATM Metro", cat: "Trasporti", tipo: "out", importo: 2.0, quando: "Oggi · 08:05", mese: MESE_SEED, ts: 3 },
-      { nome: "Enel Energia", cat: "Casa", tipo: "out", importo: 74.5, quando: "Ieri", mese: MESE_SEED, ts: 2 },
-      { nome: "Bar Centrale", cat: "Cibo", tipo: "out", importo: 3.8, quando: "Ieri", mese: MESE_SEED, ts: 1 },
-    ] satisfies Omit<Transazione, "id">[]
-  ).map((t) => ({ ...t, id: `seed-${t.nome}` })),
-  obiettivi: [
-    { id: "seed-vac", nome: "Vacanza estate", target: 2000, salvato: 1200, colore: "#6b72f0" },
-    { id: "seed-fondo", nome: "Fondo emergenza", target: 5000, salvato: 3400, colore: "#1f9d6b" },
-    { id: "seed-laptop", nome: "Nuovo laptop", target: 1400, salvato: 300, colore: "#c9a86a" },
-  ],
-  conti: [
-    { id: "seed-prep", nome: "Carta prepagata", sotto: "•••• 7734", saldo: 340 },
-    { id: "seed-risp", nome: "Conto risparmio", sotto: "Deposito", saldo: 3400 },
-    { id: "seed-cash", nome: "Contanti", sotto: "Portafoglio", saldo: 0 },
-  ],
+  nome: "",
+  tx: [],
+  obiettivi: [],
+  conti: [],
 };
 
 // ------------------------------------------------------------------ calcoli

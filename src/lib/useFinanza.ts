@@ -15,7 +15,7 @@ import {
   type Transazione,
 } from "@/lib/finanza";
 
-const CHIAVE = "finanza:v1";
+const CHIAVE = "finanza:v2";
 
 /**
  * Stato dell'app tenuto sul dispositivo. Parte dai dati d'esempio (uguali sul

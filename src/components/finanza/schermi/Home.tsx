@@ -1,8 +1,5 @@
 import { RigaTx } from "@/components/finanza/RigaTx";
-import { eur, iniziale, type Calcolo, type Stato } from "@/lib/finanza";
-
-const BARRE = [40, 55, 48, 70, 62, 80, 100];
-const MESI = ["Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set"];
+import { andamentoSaldo, eur, iniziale, type Calcolo, type Stato } from "@/lib/finanza";
 
 export function Home({
   stato,
@@ -16,13 +13,14 @@ export function Home({
   onProfilo: () => void;
 }) {
   const recenti = stato.tx.slice(0, 3);
+  const and = andamentoSaldo(stato.tx);
 
   return (
     <>
       <div className="flex items-center justify-between" style={{ marginTop: 6 }}>
         <div>
           <div style={{ fontSize: 13, color: "#8a8f99", fontWeight: 500 }}>Buongiorno,</div>
-          <div className="h1">{stato.nome}</div>
+          <div className="h1">{stato.nome || "Benvenuto"}</div>
         </div>
         <button
           type="button"
@@ -31,7 +29,14 @@ export function Home({
           className="flex items-center justify-center text-white"
           style={{ width: 38, height: 38, borderRadius: 11, background: "#111318", fontWeight: 700, fontSize: 14, border: 0, cursor: "pointer", fontFamily: "inherit" }}
         >
-          {iniziale(stato.nome)}
+          {stato.nome ? (
+            iniziale(stato.nome)
+          ) : (
+            <svg viewBox="0 0 24 24" width={20} height={20} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="8" r="3.2" />
+              <path d="M5.5 20a6.5 6.5 0 0 1 13 0" />
+            </svg>
+          )}
         </button>
       </div>
 
@@ -44,25 +49,43 @@ export function Home({
               {eur(calcolo.saldo)}
             </div>
           </div>
-          <div
-            style={{ background: "rgba(124,131,255,.18)", color: "#a3a8ff", fontSize: 12, fontWeight: 700, padding: "5px 8px", borderRadius: 8 }}
-          >
-            ▲ 6,2%
-          </div>
-        </div>
-        <div className="flex items-end" style={{ gap: 5, height: 60, marginTop: 20 }}>
-          {BARRE.map((h, i) => (
+          {and.haDati ? (
             <div
-              key={i}
-              style={{ flex: 1, background: i === 4 || i === 6 ? "#6b72f0" : "#2a2d38", borderRadius: "3px 3px 0 0", height: `${h}%` }}
-            />
-          ))}
+              style={{
+                background: and.nettoMese >= 0 ? "rgba(143,224,182,.16)" : "rgba(240,182,168,.16)",
+                color: and.nettoMese >= 0 ? "#8fe0b6" : "#f0b6a8",
+                fontSize: 12,
+                fontWeight: 700,
+                padding: "5px 8px",
+                borderRadius: 8,
+              }}
+            >
+              {and.nettoMese >= 0 ? "▲" : "▼"} {eur(and.nettoMese, 0)}
+            </div>
+          ) : null}
         </div>
-        <div className="flex justify-between" style={{ marginTop: 8, fontSize: 10, color: "#5c616b", fontWeight: 500 }}>
-          {MESI.map((m) => (
-            <span key={m}>{m}</span>
-          ))}
-        </div>
+
+        {and.haDati ? (
+          <>
+            <div className="flex items-end" style={{ gap: 5, height: 60, marginTop: 20 }}>
+              {and.barre.map((h, i) => (
+                <div
+                  key={i}
+                  style={{ flex: 1, background: i === and.barre.length - 1 ? "#6b72f0" : "#2a2d38", borderRadius: "3px 3px 0 0", height: `${h}%` }}
+                />
+              ))}
+            </div>
+            <div className="flex justify-between" style={{ marginTop: 8, fontSize: 10, color: "#5c616b", fontWeight: 500 }}>
+              {and.etichette.map((m, i) => (
+                <span key={i}>{m}</span>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div style={{ marginTop: 16, fontSize: 12.5, color: "#7e838d", fontWeight: 500 }}>
+            Aggiungi un movimento col «+» e qui vedrai l&apos;andamento.
+          </div>
+        )}
       </div>
 
       {/* entrate / uscite */}
@@ -103,13 +126,17 @@ export function Home({
       {/* recenti */}
       <div className="flex items-baseline justify-between" style={{ marginTop: 20 }}>
         <div style={{ fontSize: 15, fontWeight: 700 }}>Transazioni recenti</div>
-        <span onClick={onVediSpese} style={{ fontSize: 13, color: "#6b72f0", fontWeight: 600, cursor: "pointer" }}>
-          Vedi tutte
-        </span>
+        {recenti.length > 0 ? (
+          <span onClick={onVediSpese} style={{ fontSize: 13, color: "#6b72f0", fontWeight: 600, cursor: "pointer" }}>
+            Vedi tutte
+          </span>
+        ) : null}
       </div>
       <div className="card" style={{ marginTop: 10, padding: "4px 15px" }}>
         {recenti.length === 0 ? (
-          <div style={{ padding: "16px 0", fontSize: 13, color: "#8a8f99" }}>Nessun movimento ancora.</div>
+          <div style={{ padding: "18px 2px", fontSize: 13.5, color: "#8a8f99" }}>
+            Nessun movimento. Tocca il «+» per aggiungere il primo.
+          </div>
         ) : (
           recenti.map((tx, i) => (
             <RigaTx key={tx.id} tx={tx} size={32} ultima={i === recenti.length - 1} />
